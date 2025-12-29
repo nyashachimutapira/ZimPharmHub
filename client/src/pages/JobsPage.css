@@ -1,0 +1,155 @@
+.jobs-page {
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  min-height: calc(100vh - 200px);
+}
+
+.jobs-page h1 {
+  text-align: center;
+  color: #003366;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+
+.search-filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.search-input,
+.filter-input,
+.filter-select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.search-input:focus,
+.filter-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: #003366;
+  box-shadow: 0 0 5px rgba(0, 51, 102, 0.2);
+}
+
+.jobs-list {
+  display: grid;
+  gap: 20px;
+}
+
+.job-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.job-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.job-header h3 {
+  margin: 0;
+  color: #003366;
+  font-size: 18px;
+  flex: 1;
+}
+
+.featured-badge {
+  background-color: #ffc107;
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.job-position {
+  color: #666;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.job-pharmacy {
+  color: #00bfff;
+  font-weight: 600;
+  margin: 5px 0;
+}
+
+.job-location {
+  color: #999;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+.job-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.employment-type {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.salary {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.loading,
+.no-results {
+  text-align: center;
+  color: #666;
+  padding: 40px 20px;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .search-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .job-header {
+    flex-direction: column;
+  }
+
+  .featured-badge {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .job-footer {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}

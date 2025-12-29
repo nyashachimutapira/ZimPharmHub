@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaBriefcase, FaBox, FaDrug, FaUsers, FaNewspaper, FaCalendar } from 'react-icons/fa';
+import { FaBriefcase, FaBox, FaPills, FaUsers, FaNewspaper, FaCalendar } from 'react-icons/fa';
 import './HomePage.css';
 
 function HomePage() {
@@ -41,7 +41,7 @@ function HomePage() {
           </div>
 
           <div className="feature-card">
-            <FaDrug className="feature-icon" />
+            <FaPills className="feature-icon" />
             <h3>Pharmacy Profiles</h3>
             <p>Connect with verified pharmacies across Zimbabwe</p>
             <Link to="/pharmacies">Find Pharmacies →</Link>

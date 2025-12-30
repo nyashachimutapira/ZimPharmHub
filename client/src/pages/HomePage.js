@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import { FaBriefcase, FaBox, FaPills, FaUsers, FaNewspaper, FaCalendar } from 'react-icons/fa';
 import './HomePage.css';
 
 function HomePage() {
+  const [stats, setStats] = useState({ jobs: null, pharmacies: null, members: null, events: null });
+
+  useEffect(() => {
+    let mounted = true;
+    axios.get('/api/stats')
+      .then((res) => {
+        if (mounted) setStats(res.data);
+      })
+      .catch((err) => console.error('Error fetching stats:', err));
+    return () => { mounted = false; };
+  }, []);
+
   return (
     <div className="home-page">
       {/* Hero Section */}
@@ -74,19 +87,19 @@ function HomePage() {
       <section className="stats">
         <div className="container">
           <div className="stat">
-            <h3>1000+</h3>
+            <h3>{stats.jobs !== null ? stats.jobs : '—'}</h3>
             <p>Active Job Listings</p>
           </div>
           <div className="stat">
-            <h3>500+</h3>
+            <h3>{stats.pharmacies !== null ? stats.pharmacies : '—'}</h3>
             <p>Registered Pharmacies</p>
           </div>
           <div className="stat">
-            <h3>5000+</h3>
+            <h3>{stats.members !== null ? stats.members : '—'}</h3>
             <p>Community Members</p>
           </div>
           <div className="stat">
-            <h3>100+</h3>
+            <h3>{stats.events !== null ? stats.events : '—'}</h3>
             <p>Monthly Events</p>
           </div>
         </div>

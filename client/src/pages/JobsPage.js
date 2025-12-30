@@ -75,6 +75,17 @@ function JobsPage() {
             onChange={handleFilterChange}
             className="filter-input"
           />
+
+          <button className="btn btn-secondary" onClick={async () => {
+            const name = prompt('Name this saved search:');
+            if (!name) return;
+            try {
+              await axios.post('/api/saved-searches', { name, searchParams: filters }, { headers: { 'user-id': localStorage.getItem('userId') } });
+              alert('Saved search created');
+            } catch (e) {
+              alert('Error saving search: ' + (e.response?.data?.message || e.message));
+            }
+          }}>Save Search</button>
         </div>
 
         {loading ? (

@@ -12,7 +12,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=zimpharmhub
 DB_USER=zimpharmuser
-DB_PASSWORD=password123
+DB_PASSWORD=giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF
 DB_DIALECT=postgres
 
 # ============================================

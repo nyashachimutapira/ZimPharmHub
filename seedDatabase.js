@@ -11,12 +11,18 @@ const Article = require('./models/Article');
 const Event = require('./models/Event');
 const ForumPost = require('./models/ForumPost');
 
-// Connect to MongoDB
+// Only run seed via MongoDB if explicitly requested
+if (process.env.SEED_MONGODB !== 'true') {
+  console.log('Skipping MongoDB seeding. Set SEED_MONGODB=true to enable.');
+  process.exit(0);
+}
+
+// Connect to MongoDB (seed mode)
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/zimpharmhub', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 }).then(() => {
-  console.log('Connected to MongoDB');
+  console.log('Connected to MongoDB (seed mode)');
   seedDatabase();
 }).catch(err => {
   console.error('MongoDB connection error:', err);

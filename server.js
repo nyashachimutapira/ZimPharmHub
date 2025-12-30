@@ -2,15 +2,33 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+// MongoDB (Mongoose) connection used by legacy code
+// Disabled by default — enable by setting USE_MONGODB=true and MONGODB_URI
+let mongoose;
+if (process.env.USE_MONGODB === 'true' && process.env.MONGODB_URI) {
+  mongoose = require('mongoose');
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).then(() => console.log('✅ MongoDB connected (legacy)'))
+    .catch(err => console.error('❌ MongoDB connection error:', err.message));
+} else {
+  console.log('ℹ️ MongoDB disabled. Set USE_MONGODB=true and MONGODB_URI to enable legacy Mongo features.');
+}
+
 // PostgreSQL Database Connection
 const sequelize = require('./config/database');
 
+const path = require('path');
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
+
+// Serve uploaded files (resumes, images, etc.)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Test Database Connection
 sequelize.authenticate()
@@ -44,6 +62,9 @@ app.use('/api/payments', require('./routes/payments'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/stats', require('./routes/stats'));
+// Saved searches are disabled until migrated to PostgreSQL/Sequelize
+// app.use('/api/saved-searches', require('./routes/savedSearches'));
 
 // Health check
 app.get('/api/health', (req, res) => {

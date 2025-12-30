@@ -23,14 +23,22 @@ function JobDetailPage() {
     }
   };
 
+  const [resumeFile, setResumeFile] = useState(null);
+  const [coverLetter, setCoverLetter] = useState('');
+
   const handleApply = async () => {
     try {
-      await axios.post(`/api/jobs/${id}/apply`, {}, {
-        headers: { 'user-id': localStorage.getItem('userId') }
+      const form = new FormData();
+      if (resumeFile) form.append('resume', resumeFile);
+      form.append('coverLetter', coverLetter);
+
+      await axios.post(`/api/jobs/${id}/apply`, form, {
+        headers: { 'user-id': localStorage.getItem('userId'), 'Content-Type': 'multipart/form-data' }
       });
       alert('Application submitted successfully!');
+      fetchJob();
     } catch (error) {
-      alert('Error applying for job: ' + error.message);
+      alert('Error applying for job: ' + (error.response?.data?.message || error.message));
     }
   };
 
@@ -42,7 +50,15 @@ function JobDetailPage() {
       <div className="container">
         <div className="job-detail-header">
           <h1>{job.title}</h1>
-          <button className="btn btn-primary" onClick={handleApply}>Apply Now</button>
+          <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+            <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => setResumeFile(e.target.files[0])} />
+            <button className="btn btn-primary" onClick={handleApply}>Apply Now</button>
+          </div>
+        </div>
+
+        <div className="job-apply-section" style={{marginTop: '12px'}}>
+          <label>Cover Letter (optional)</label>
+          <textarea value={coverLetter} onChange={(e) => setCoverLetter(e.target.value)} rows={4} style={{width: '100%'}} />
         </div>
 
         <div className="job-detail-grid">

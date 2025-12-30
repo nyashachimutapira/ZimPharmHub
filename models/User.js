@@ -41,6 +41,7 @@ const UserSchema = new mongoose.Schema({
     default: 'free',
   },
   subscriptionEndDate: Date,
+  locale: { type: String, default: 'en' },
   savedJobs: [mongoose.Schema.Types.ObjectId],
   appliedJobs: [mongoose.Schema.Types.ObjectId],
   createdAt: {

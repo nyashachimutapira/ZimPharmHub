@@ -52,6 +52,76 @@ function AdminPanelPage() {
     }
   };
 
+  const [payments, setPayments] = useState([]);
+  const fetchPayments = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('/api/admin/payments', {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'user-id': localStorage.getItem('userId'),
+        },
+      });
+      setPayments(response.data);
+    } catch (error) {
+      console.error('Error fetching payments:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'payments') {
+      fetchPayments();
+    }
+  }, [activeTab]);
+
+  const handleReapplyPayment = async (paymentId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(`/api/admin/payments/${paymentId}/reapply`, {}, {
+        headers: { Authorization: `Bearer ${token}`, 'user-id': localStorage.getItem('userId') }
+      });
+      fetchPayments();
+    } catch (error) {
+      console.error('Error reapplying payment:', error);
+    }
+  };
+
+  const handleFeatureJob = async (jobId, featuredUntil) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`/api/jobs/${jobId}/feature`, { featured: true, featuredUntil }, {
+        headers: { Authorization: `Bearer ${token}`, 'user-id': localStorage.getItem('userId') }
+      });
+      fetchPayments();
+    } catch (error) {
+      console.error('Error featuring job:', error);
+    }
+  };
+
+  const handleMarkReceiptSent = async (paymentId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`/api/admin/payments/${paymentId}/audit`, { receiptSent: true }, {
+        headers: { Authorization: `Bearer ${token}`, 'user-id': localStorage.getItem('userId') }
+      });
+      fetchPayments();
+    } catch (error) {
+      console.error('Error marking receipt sent:', error);
+    }
+  };
+
+  const handleMarkOwnerNotified = async (paymentId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`/api/admin/payments/${paymentId}/audit`, { ownerNotified: true }, {
+        headers: { Authorization: `Bearer ${token}`, 'user-id': localStorage.getItem('userId') }
+      });
+      fetchPayments();
+    } catch (error) {
+      console.error('Error marking owner notified:', error);
+    }
+  };
+
   useEffect(() => {
     if (activeTab === 'users') {
       fetchUsers();
@@ -112,6 +182,12 @@ function AdminPanelPage() {
             onClick={() => setActiveTab('content')}
           >
             Content
+          </button>
+          <button
+            className={activeTab === 'payments' ? 'active' : ''}
+            onClick={() => setActiveTab('payments')}
+          >
+            Payments
           </button>
         </div>
 
@@ -256,6 +332,60 @@ function AdminPanelPage() {
                           >
                             {user.isVerified ? 'Unverify' : 'Verify'}
                           </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'payments' && (
+            <div>
+              <h2>Payments</h2>
+              <div className="admin-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Payment ID</th>
+                      <th>Job</th>
+                      <th>Pharmacy</th>
+                      <th>Amount</th>
+                      <th>Receipt Email</th>
+                      <th>Receipt Sent</th>
+                      <th>Owner Notified</th>
+                      <th>Provider ID</th>
+                      <th>Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {payments.map((p) => (
+                      <tr key={p.id}>
+                        <td>{p.id}</td>
+                        <td>{p.job ? p.job.title : '—'}</td>
+                        <td>{p.job && p.job.pharmacyId ? (p.job.pharmacyId) : (p.user ? `${p.user.firstName} ${p.user.lastName}` : '—')}</td>
+                        <td>{p.amount} {p.currency}</td>
+                        <td>{p.receiptEmail || '—'}</td>
+                        <td>{p.receiptSent ? '✅' : '—'}</td>
+                        <td>{p.ownerNotified ? '✅' : '—'}</td>
+                        <td>{p.providerId}</td>
+                        <td>{new Date(p.createdAt).toLocaleString()}</td>
+                        <td>
+                          {p.job && (
+                            <>
+                              <button className="btn" onClick={() => handleFeatureJob(p.job.id, p.job.featuredUntil)}>Feature</button>
+                              <button className="btn" onClick={() => window.open(`/jobs/${p.job.id}`, '_blank')}>View Job</button>
+                            </>
+                          )}
+                          {!p.receiptSent && (
+                            <button className="btn" onClick={() => handleMarkReceiptSent(p.id)}>Mark Receipt Sent</button>
+                          )}
+                          {!p.ownerNotified && p.job && (
+                            <button className="btn" onClick={() => handleMarkOwnerNotified(p.id)}>Mark Owner Notified</button>
+                          )}
+                          <button className="btn-verify" onClick={() => handleReapplyPayment(p.id)}>Reapply</button>
                         </td>
                       </tr>
                     ))}

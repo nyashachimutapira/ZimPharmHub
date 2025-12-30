@@ -1,0 +1,34 @@
+.post-job-container { max-width: 1100px; margin: 2rem auto; padding: 1rem; }
+.post-job-layout { display: flex; gap: 2rem; align-items:flex-start; }
+.post-job-form { flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+.post-job-form label { display: flex; flex-direction: column; font-weight: 600; }
+.post-job-form input, .post-job-form textarea, .post-job-form select { padding: 0.75rem; border: 2px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-primary); transition: all var(--transition-base); }
+.post-job-form input:focus, .post-job-form textarea:focus, .post-job-form select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(0,102,204,0.06); }
+.post-job-preview { width: 360px; position: sticky; top: 1.5rem; }
+.job-preview-card { border: 1px solid rgba(0,0,0,0.04); padding: 1rem; border-radius: 8px; background: var(--bg-primary); box-shadow: var(--shadow-sm); }
+.job-preview-card h2 { margin: 0; font-size: 1.1rem; }
+.job-preview-card .meta { color: var(--text-secondary); margin-top: 0.5rem; display:flex; gap:0.5rem; }
+.job-preview-card .salary, .job-preview-card .location { margin-top: 0.5rem; font-size: 0.95rem; }
+.form-actions { margin-top: 0.5rem; }
+.alert { padding: 0.75rem; border-radius: 4px; margin-bottom: 1rem; }
+.alert-danger { background: var(--alert-danger); border: 1px solid #ffbcbc; }
+
+/* Chips input */
+.chips-input { display: flex; flex-direction: column; gap: 0.5rem; }
+.chips-list { display:flex; flex-wrap:wrap; gap:0.5rem; }
+.chip { background:var(--primary-light); color:var(--primary-dark); padding:0.25rem 0.5rem; border-radius:16px; font-size:0.9rem; display:inline-flex; align-items:center; gap:0.5rem; border: 1px solid rgba(0,0,0,0.04); }
+.chip-remove { background:transparent; border:none; cursor:pointer; font-weight:600; }
+.chips-control { display:flex; gap:0.5rem; }
+.chips-control input { flex:1; padding:0.5rem; border:1px solid var(--border-color); border-radius:6px; }
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .post-job-layout { flex-direction: column; }
+  .post-job-preview { width: 100%; position: relative; }
+}
+
+@media (max-width: 480px) {
+  .post-job-form input, .post-job-form textarea, .post-job-form select { padding: 0.6rem; }
+  .btn { padding: 0.6rem 0.9rem; font-size: 0.9rem; }
+}
+

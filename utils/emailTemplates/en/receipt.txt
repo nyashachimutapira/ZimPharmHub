@@ -1,0 +1,11 @@
+Hi {{recipientName}},
+
+Thank you for your payment on {{siteName}}.
+
+Job: {{jobTitle}}
+Amount: {{amount}} {{currency}}
+Featured until: {{featuredUntil}}
+View: {{jobUrl}}
+
+Thanks,
+{{siteName}} Team

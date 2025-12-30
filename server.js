@@ -27,6 +27,8 @@ app.use(express.json());
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 
+// Export app for tests
+module.exports = app;
 // Serve uploaded files (resumes, images, etc.)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -38,8 +40,25 @@ sequelize.authenticate()
     // Sync models in development (create tables if they don't exist)
     if (process.env.NODE_ENV === 'development') {
       sequelize.sync({ alter: false })
-        .then(() => console.log('✅ Database models synchronized'))
+        .then(() => {
+          console.log('✅ Database models synchronized');
+          // Start job scheduler in development/production - handles expirations and un-featuring
+          try {
+            const { startJobScheduler } = require('./utils/jobScheduler');
+            startJobScheduler();
+          } catch (err) {
+            console.error('Failed to start job scheduler:', err.message);
+          }
+        })
         .catch(err => console.error('❌ Database sync error:', err));
+    } else {
+      // Always start scheduler in production too
+      try {
+        const { startJobScheduler } = require('./utils/jobScheduler');
+        startJobScheduler();
+      } catch (err) {
+        console.error('Failed to start job scheduler:', err.message);
+      }
     }
   })
   .catch(err => {
@@ -59,12 +78,30 @@ app.use('/api/articles', require('./routes/articles'));
 app.use('/api/events', require('./routes/events'));
 app.use('/api/newsletter', require('./routes/newsletter'));
 app.use('/api/payments', require('./routes/payments'));
+app.use('/api/applications', require('./routes/applications'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/messages', require('./routes/messages'));
+app.use('/api/ads', require('./routes/ads'));
+app.use('/api/uploads', require('./routes/uploads'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/stats', require('./routes/stats'));
+// Uploads (images/files)
+app.use('/api/uploads', require('./routes/uploads'));
+
 // Saved searches are disabled until migrated to PostgreSQL/Sequelize
 // app.use('/api/saved-searches', require('./routes/savedSearches'));
+
+// Saved jobs (bookmarks)
+app.use('/api/saved-jobs', require('./routes/savedJobs'));
+
+// Job alerts and notifications
+app.use('/api/job-alerts', require('./routes/jobAlerts'));
+
+// Advanced search and filters
+app.use('/api', require('./routes/advancedSearch'));
+
+// Dashboard
+app.use('/api/dashboard', require('./routes/dashboard'));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -75,9 +112,14 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🌐 API available at http://localhost:${PORT}/api/health`);
-  console.log(`📊 Frontend should be at http://localhost:3000`);
-});
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🌐 API available at http://localhost:${PORT}/api/health`);
+    console.log(`📊 Frontend should be at http://localhost:3000`);
+  });
+} else {
+  // When required as a module (e.g. in tests), don't start the server automatically
+  console.log('ℹ️ Server app imported for testing. Listening is disabled.');
+}

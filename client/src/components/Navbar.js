@@ -1,32 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import Notifications from './Notifications';
 import './Navbar.css';
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState(null);
-  const [userType, setUserType] = useState(null);
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const id = localStorage.getItem('userId');
-    const type = localStorage.getItem('userType');
-    setIsLoggedIn(!!token);
-    setUserId(id);
-    setUserType(type);
-  }, []);
-
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userType');
-    setIsLoggedIn(false);
-    setUserId(null);
-    setUserType(null);
+    logout();
     navigate('/');
   };
 
@@ -70,13 +55,23 @@ function Navbar() {
             Contact
           </Link>
           
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
-              <Notifications userId={userId} />
+              <Notifications userId={user?.id} />
               <Link to="/dashboard" className="nav-link">
                 Dashboard
               </Link>
-              {userType === 'admin' && (
+              {user?.userType === 'pharmacy' && (
+                <>
+                  <Link to="/post-job" className="nav-link">
+                    Post Job
+                  </Link>
+                  <Link to="/pharmacy-dashboard" className="nav-link">
+                    Pharmacy Dashboard
+                  </Link>
+                </>
+              )}
+              {user?.userType === 'admin' && (
                 <Link to="/admin" className="nav-link">
                   Admin
                 </Link>
@@ -84,7 +79,7 @@ function Navbar() {
               <Link to="/messages" className="nav-link">
                 Messages
               </Link>
-              <Link to={`/profile/${userId}`} className="nav-link">
+              <Link to={`/profile/${user?.id}`} className="nav-link">
                 <FaUser /> Profile
               </Link>
               <button onClick={handleLogout} className="nav-link btn-nav">

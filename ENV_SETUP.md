@@ -8,12 +8,13 @@ Create a `.env` file in the root directory (`ZimPharmHub/.env`) with the followi
 # ============================================
 # PostgreSQL Database Configuration
 # ============================================
-DB_HOST=localhost
+DB_HOST=dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com
 DB_PORT=5432
-DB_NAME=zimpharmhub
-DB_USER=zimpharmuser
+DB_NAME=zimphamhub
+DB_USER=zimpham_user
 DB_PASSWORD=giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF
 DB_DIALECT=postgres
+DATABASE_URLpostgresql://zimphamhub_user:giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF@dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com/zimphamhub
 
 # ============================================
 # Server Configuration
@@ -38,12 +39,13 @@ FRONTEND_URL=http://localhost:3000
 ```powershell
 cd ZimPharmHub
 @"
-DB_HOST=localhost
+DB_HOST=dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com
 DB_PORT=5432
-DB_NAME=zimpharmhub
-DB_USER=zimpharmuser
-DB_PASSWORD=password123
+DB_NAME=zimphamhub
+DB_USER=zimpham_user
+DB_PASSWORD=giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF
 DB_DIALECT=postgres
+DATABASE_URL=postgresql://zimphamhub_user:giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF@dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com/zimphamhub
 PORT=5000
 NODE_ENV=development
 JWT_SECRET=your-secure-random-key-change-this-in-production-minimum-32-characters-long
@@ -54,12 +56,13 @@ FRONTEND_URL=http://localhost:3000
 ### Mac/Linux:
 ```bash
 cat > .env << 'EOF'
-DB_HOST=localhost
+DB_HOST=dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com
 DB_PORT=5432
-DB_NAME=zimpharmhub
-DB_USER=zimpharmuser
-DB_PASSWORD=password123
+DB_NAME=zimphamhub
+DB_USER=zimpham_user
+DB_PASSWORD=giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF
 DB_DIALECT=postgres
+DATABASE_URL=postgresql://zimphamhub_user:giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF@dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com/zimphamhub
 PORT=5000
 NODE_ENV=development
 JWT_SECRET=your-secure-random-key-change-this-in-production-minimum-32-characters-long
@@ -75,12 +78,13 @@ Or manually create the file and copy the content above.
 # ============================================
 # PostgreSQL Database Configuration
 # ============================================
-DB_HOST=localhost
+DB_HOST=dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com
 DB_PORT=5432
-DB_NAME=zimpharmhub
-DB_USER=zimpharmuser
-DB_PASSWORD=password123
+DB_NAME=zimphamhub
+DB_USER=zimpham_user
+DB_PASSWORD=giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF
 DB_DIALECT=postgres
+DATABASE_URL=postgresql://zimphamhub_user:giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF@dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com/zimphamhub
 
 # Alternative: Use connection string (for production/cloud)
 # DATABASE_URL=postgresql://zimpharmuser:password123@localhost:5432/zimpharmhub
@@ -103,6 +107,8 @@ JWT_SECRET=your-secure-random-key-change-this-in-production-minimum-32-character
 # ============================================
 # STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
 # STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key_here
+# STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+# FEATURE_PRICE_PER_DAY_USD=5  # default price per day in USD for featuring a job (optional)
 
 # ============================================
 # Email Configuration (Optional - for sending emails)
@@ -136,17 +142,18 @@ If you already have a `.env` file with MongoDB configuration, update it:
 
 **Remove/Replace:**
 ```env
-MONGODB_URI=mongodb://localhost:27017/zimpharmhub
+DATABASE_URL=postgresql://zimphamhub_user:giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF@dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com/zimphamhub
 ```
 
 **Add:**
 ```env
-DB_HOST=localhost
+DB_HOST=dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com
 DB_PORT=5432
-DB_NAME=zimpharmhub
-DB_USER=zimpharmuser
-DB_PASSWORD=password123
+DB_NAME=zimphamhub
+DB_USER=zimpham_user
+DB_PASSWORD=giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF
 DB_DIALECT=postgres
+DATABASE_URL=postgresql://zimphamhub_user:giG8XJ36wM6xYfOAmZJPtvbDyF6omGEF@dpg-d5991uu3jp1c73btvgu0-a.oregon-postgres.render.com/zimphamhub
 ```
 
 ## Verify Your Configuration

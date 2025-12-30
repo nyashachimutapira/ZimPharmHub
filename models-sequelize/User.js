@@ -70,6 +70,10 @@ const User = sequelize.define('User', {
   subscriptionEndDate: {
     type: DataTypes.DATE,
     allowNull: true
+  },
+  locale: {
+    type: DataTypes.STRING,
+    defaultValue: 'en'
   }
 }, {
   tableName: 'users',

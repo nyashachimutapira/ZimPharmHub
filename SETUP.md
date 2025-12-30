@@ -253,6 +253,9 @@ git push heroku main
 
 2. **Payment Integration**
    - Set up Stripe account
+  - Add `STRIPE_SECRET_KEY` and `STRIPE_PUBLISHABLE_KEY` to your `.env`.
+  - Configure `STRIPE_WEBHOOK_SECRET` and register the webhook endpoint at `/api/payments/webhook` in your Stripe dashboard.
+  - Optionally set `FEATURE_PRICE_PER_DAY_USD` in `.env` to define per-day price for job promotion.
    - Implement subscription payments
    - Feature listing payments
 

@@ -1,0 +1,11 @@
+Bonjour {{recipientName}},
+
+Merci pour votre paiement sur {{siteName}}.
+
+Offre: {{jobTitle}}
+Montant: {{amount}} {{currency}}
+Mis en avant jusqu'au: {{featuredUntil}}
+Voir: {{jobUrl}}
+
+Merci,
+{{siteName}}

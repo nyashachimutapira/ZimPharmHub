@@ -24,6 +24,7 @@ CREATE TABLE users (
     "isVerified" BOOLEAN DEFAULT false,
     "subscriptionStatus" VARCHAR(20) DEFAULT 'free' CHECK ("subscriptionStatus" IN ('free', 'premium', 'enterprise')),
     "subscriptionEndDate" TIMESTAMP,
+    "locale" VARCHAR(8) DEFAULT 'en',
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -87,10 +88,47 @@ CREATE TABLE jobs (
     status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'closed', 'filled')),
     featured BOOLEAN DEFAULT false,
     featured_until TIMESTAMP,
+    expires_at TIMESTAMP,
     views INTEGER DEFAULT 0,
     "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ============================================
+-- PAYMENTS TABLE
+-- ============================================
+CREATE TABLE payments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    job_id UUID REFERENCES jobs(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    amount NUMERIC(10,2) NOT NULL,
+    currency VARCHAR(10) DEFAULT 'usd',
+    provider VARCHAR(50) DEFAULT 'stripe',
+    provider_id VARCHAR(255),
+    receipt_email VARCHAR(255),
+    receipt_sent BOOLEAN DEFAULT false,
+    receipt_sent_at TIMESTAMP,
+    owner_notified BOOLEAN DEFAULT false,
+    owner_notified_at TIMESTAMP,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- EMAIL AUDIT TABLE
+-- ============================================
+CREATE TABLE email_audits (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    payment_id UUID REFERENCES payments(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    to_email VARCHAR(255),
+    subject VARCHAR(500),
+    provider VARCHAR(50) DEFAULT 'smtp',
+    message_id VARCHAR(255),
+    status VARCHAR(50) DEFAULT 'pending',
+    raw_response TEXT,
+    "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 CREATE INDEX idx_jobs_pharmacy_id ON jobs(pharmacy_id);
 CREATE INDEX idx_jobs_status ON jobs(status);

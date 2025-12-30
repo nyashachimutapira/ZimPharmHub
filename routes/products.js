@@ -1,5 +1,7 @@
 const express = require('express');
 const Product = require('../models/Product');
+const Newsletter = require('../models/Newsletter');
+const { notifySubscribers } = require('../utils/mailer');
 const router = express.Router();
 
 // Get all products
@@ -59,6 +61,18 @@ router.post('/', async (req, res) => {
     });
 
     await product.save();
+
+    // Notify newsletter subscribers about new product
+    try {
+      const productUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/products/${product._id}`;
+      const subject = `New product in store: ${product.name}`;
+      const text = `A new product is available: ${product.name}. View: ${productUrl}`;
+      const html = `<p>New product available at ${product.pharmacy || 'a pharmacy'}:</p><h3>${product.name}</h3><p>${product.description || ''}</p><p><a href="${productUrl}">View product</a></p>`;
+      notifySubscribers('products', subject, text, html);
+    } catch (err) {
+      console.warn('Failed to notify subscribers about new product:', err.message);
+    }
+
     res.status(201).json(product);
   } catch (error) {
     res.status(500).json({ message: 'Error creating product', error: error.message });

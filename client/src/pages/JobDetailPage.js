@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { FaFileUpload, FaTimes, FaCheckCircle, FaExclamationCircle, FaFile, FaSpinner } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 import './JobDetailPage.css';
 
 function JobDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState(null); // 'pending', 'success', 'error'
 
   useEffect(() => {
     fetchJob();
@@ -25,40 +31,233 @@ function JobDetailPage() {
 
   const [resumeFile, setResumeFile] = useState(null);
   const [coverLetter, setCoverLetter] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [hasApplied, setHasApplied] = useState(false);
 
-  const handleApply = async () => {
-    try {
-      const form = new FormData();
-      if (resumeFile) form.append('resume', resumeFile);
-      form.append('coverLetter', coverLetter);
+  // Note: hasApplied state is set after a successful application or when backend returns "already applied" error
 
-      await axios.post(`/api/jobs/${id}/apply`, form, {
-        headers: { 'user-id': localStorage.getItem('userId'), 'Content-Type': 'multipart/form-data' }
-      });
-      alert('Application submitted successfully!');
-      fetchJob();
-    } catch (error) {
-      alert('Error applying for job: ' + (error.response?.data?.message || error.message));
+  const validateFile = (file) => {
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const allowedExtensions = ['.pdf', '.doc', '.docx'];
+
+    if (!file) return 'Please select a resume file';
+
+    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+    if (!allowedExtensions.includes(fileExtension)) {
+      return 'Only PDF, DOC, and DOCX files are allowed';
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      return 'Invalid file type. Please upload PDF, DOC, or DOCX';
+    }
+
+    if (file.size > maxSize) {
+      return 'File size must be less than 5MB';
+    }
+
+    return null;
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
     }
   };
 
-  if (loading) return <div className="container"><p>Loading job details...</p></div>;
-  if (!job) return <div className="container"><p>Job not found</p></div>;
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      const error = validateFile(file);
+      if (error) {
+        setErrors({ resume: error });
+      } else {
+        setResumeFile(file);
+        setErrors({ ...errors, resume: null });
+      }
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const error = validateFile(file);
+      if (error) {
+        setErrors({ resume: error });
+        setResumeFile(null);
+      } else {
+        setResumeFile(file);
+        setErrors({ ...errors, resume: null });
+      }
+    }
+  };
+
+  const handleApply = async () => {
+    setErrors({});
+    
+    // Validation
+    if (!resumeFile) {
+      setErrors({ resume: 'Please upload your resume' });
+      return;
+    }
+
+    if (!isAuthenticated) {
+      setShowApplyModal(false);
+      navigate('/login', { state: { returnTo: `/jobs/${id}` } });
+      return;
+    }
+
+    setUploading(true);
+    setErrors({});
+
+    try {
+      const formData = new FormData();
+      formData.append('resume', resumeFile);
+      formData.append('coverLetter', coverLetter);
+
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      const userId = user?.id || localStorage.getItem('userId') || sessionStorage.getItem('userId');
+
+      await axios.post(`/api/jobs/${id}/apply`, formData, {
+        headers: {
+          'user-id': userId,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (progressEvent) => {
+          // Optional: Show upload progress
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          console.log(`Upload Progress: ${percentCompleted}%`);
+        }
+      });
+
+      setApplicationStatus('success');
+      setHasApplied(true);
+      setShowApplyModal(false);
+      setResumeFile(null);
+      setCoverLetter('');
+      
+      // Refresh job data
+      fetchJob();
+      
+      // Auto-close success message after 5 seconds
+      setTimeout(() => {
+        setApplicationStatus(null);
+      }, 5000);
+
+    } catch (error) {
+      setApplicationStatus('error');
+      const errorMessage = error.response?.data?.message || error.message;
+      setErrors({ submit: errorMessage });
+      
+      if (error.response?.status === 400 && (errorMessage.includes('Already applied') || errorMessage.includes('already applied'))) {
+        setHasApplied(true);
+        setShowApplyModal(false);
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  };
+
+  if (loading) {
+    return (
+      <div className="job-detail-page">
+        <div className="container">
+          <div className="loading-state">
+            <FaSpinner className="spinner" />
+            <p>Loading job details...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!job) {
+    return (
+      <div className="job-detail-page">
+        <div className="container">
+          <div className="error-state">
+            <FaExclamationCircle />
+            <p>Job not found</p>
+            <Link to="/jobs" className="btn btn-primary">Browse Jobs</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="job-detail-page">
+      {/* Success Message */}
+      {applicationStatus === 'success' && (
+        <div className="alert alert-success-message">
+          <FaCheckCircle />
+          <div>
+            <strong>Application Submitted!</strong>
+            <p>Your application has been successfully submitted. We'll review it and get back to you soon.</p>
+          </div>
+          <button onClick={() => setApplicationStatus(null)} className="alert-close">
+            <FaTimes />
+          </button>
+        </div>
+      )}
+
+      {/* Error Message */}
+      {applicationStatus === 'error' && errors.submit && (
+        <div className="alert alert-error-message">
+          <FaExclamationCircle />
+          <div>
+            <strong>Error</strong>
+            <p>{errors.submit}</p>
+          </div>
+          <button onClick={() => { setApplicationStatus(null); setErrors({}); }} className="alert-close">
+            <FaTimes />
+          </button>
+        </div>
+      )}
+
       <div className="container">
         <div className="job-detail-header">
-          <h1>{job.title}</h1>
-          <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-            <input type="file" accept=".pdf,.doc,.docx" onChange={(e) => setResumeFile(e.target.files[0])} />
-            <button className="btn btn-primary" onClick={handleApply}>Apply Now</button>
+          <div className="job-header-content">
+            <h1>{job.title}</h1>
+            <div className="job-meta-info">
+              <span className="job-location">{job.location?.city}, {job.location?.province}</span>
+              <span className="job-type">{job.employmentType}</span>
+            </div>
           </div>
-        </div>
-
-        <div className="job-apply-section" style={{marginTop: '12px'}}>
-          <label>Cover Letter (optional)</label>
-          <textarea value={coverLetter} onChange={(e) => setCoverLetter(e.target.value)} rows={4} style={{width: '100%'}} />
+          <div className="job-actions">
+            {!isAuthenticated ? (
+              <Link to="/login" className="btn btn-primary">
+                Login to Apply
+              </Link>
+            ) : hasApplied ? (
+              <button className="btn btn-success" disabled>
+                <FaCheckCircle /> Applied
+              </button>
+            ) : (
+              <button className="btn btn-primary" onClick={() => setShowApplyModal(true)}>
+                Apply Now
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="job-detail-grid">
@@ -132,6 +331,130 @@ function JobDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Application Modal */}
+      {showApplyModal && (
+        <div className="modal-overlay" onClick={() => !uploading && setShowApplyModal(false)}>
+          <div className="modal-content application-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Apply for {job.title}</h2>
+              <button 
+                className="modal-close" 
+                onClick={() => setShowApplyModal(false)}
+                disabled={uploading}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="form-group">
+                <label htmlFor="resume-upload">
+                  Resume <span className="required">*</span>
+                </label>
+                <div
+                  className={`file-upload-area ${dragActive ? 'drag-active' : ''} ${resumeFile ? 'has-file' : ''} ${errors.resume ? 'has-error' : ''}`}
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                >
+                  <input
+                    type="file"
+                    id="resume-upload"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    className="file-input"
+                    disabled={uploading}
+                  />
+                  {resumeFile ? (
+                    <div className="file-preview">
+                      <FaFile className="file-icon" />
+                      <div className="file-info">
+                        <span className="file-name">{resumeFile.name}</span>
+                        <span className="file-size">{formatFileSize(resumeFile.size)}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="file-remove"
+                        onClick={() => {
+                          setResumeFile(null);
+                          setErrors({ ...errors, resume: null });
+                        }}
+                        disabled={uploading}
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="file-upload-placeholder">
+                      <FaFileUpload className="upload-icon" />
+                      <p>
+                        <strong>Click to upload</strong> or drag and drop
+                      </p>
+                      <p className="file-hint">PDF, DOC, or DOCX (Max 5MB)</p>
+                    </div>
+                  )}
+                </div>
+                {errors.resume && (
+                  <span className="error-message">
+                    <FaExclamationCircle /> {errors.resume}
+                  </span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="cover-letter">
+                  Cover Letter <span className="optional">(Optional)</span>
+                </label>
+                <textarea
+                  id="cover-letter"
+                  value={coverLetter}
+                  onChange={(e) => setCoverLetter(e.target.value)}
+                  rows={6}
+                  placeholder="Tell us why you're interested in this position and what makes you a great fit..."
+                  disabled={uploading}
+                  className={errors.coverLetter ? 'has-error' : ''}
+                />
+                <span className="field-hint">
+                  {coverLetter.length} characters
+                </span>
+              </div>
+
+              {errors.submit && (
+                <div className="error-message submit-error">
+                  <FaExclamationCircle /> {errors.submit}
+                </div>
+              )}
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn btn-secondary"
+                onClick={() => setShowApplyModal(false)}
+                disabled={uploading}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={handleApply}
+                disabled={uploading || !resumeFile}
+              >
+                {uploading ? (
+                  <>
+                    <FaSpinner className="spinner" /> Uploading...
+                  </>
+                ) : (
+                  <>
+                    <FaFileUpload /> Submit Application
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

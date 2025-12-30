@@ -1,0 +1,15 @@
+/* Basic styles for pharmacy dashboard */
+.dashboard-container { padding: 1.5rem; }
+.dashboard-container h1 { margin-bottom: 1rem; }
+.dashboard-container section { margin-bottom: 1.25rem; padding: .75rem; border: 1px solid #e6e6e6; border-radius: 6px; }
+.ad-form { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.ad-form input, .ad-form textarea, .ad-form select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+.ad-form button { margin-top: 8px; }
+.ads-manager ul { list-style: none; padding-left: 0; }
+.ads-manager li { margin-bottom: 12px; border-bottom: 1px dashed #ccc; padding-bottom: 8px; }
+
+/* Added styles for Jobs/Products managers */
+.jobs-manager input, .products-manager input, .jobs-manager textarea, .products-manager textarea, .jobs-manager select, .products-manager select { display:block; width:100%; margin-bottom:8px; padding:8px; border:1px solid #ddd; border-radius:4px; }
+.jobs-manager .btn, .products-manager .btn { margin-top:8px }
+.image-preview img { margin-right:8px; border-radius:4px; }
+.small { font-size: .85rem; }

@@ -1,11 +1,13 @@
 import React from 'react';
 import './LoadingSpinner.css';
 
-function LoadingSpinner() {
+function LoadingSpinner({ inline = false, size = 'medium' }) {
+  const sizeClass = size === 'small' ? 'spinner-small' : size === 'large' ? 'spinner-large' : '';
+  
   return (
-    <div className="spinner-container">
-      <div className="spinner"></div>
-      <p>Loading...</p>
+    <div className={`spinner-container ${inline ? 'spinner-inline' : ''}`}>
+      <div className={`spinner ${sizeClass}`}></div>
+      {!inline && <p>Loading...</p>}
     </div>
   );
 }

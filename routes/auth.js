@@ -1,21 +1,49 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models-sequelize/User');
+const { UniqueConstraintError } = require('sequelize');
 const router = express.Router();
+
+// Test database connection endpoint (for debugging)
+router.get('/test-db', async (req, res) => {
+  try {
+    const userCount = await User.count();
+    const sampleUser = await User.findOne({ limit: 1 });
+    res.json({ 
+      success: true, 
+      message: 'Database connected successfully',
+      userCount,
+      sampleUserEmail: sampleUser?.email || 'No users found',
+      hasComparePasswordMethod: typeof User.prototype.comparePassword === 'function'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Database connection failed',
+      error: error.message,
+      errorName: error.name,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
 
 // Register
 router.post('/register', async (req, res) => {
   try {
     const { firstName, lastName, email, password, userType } = req.body;
 
-    // Check if user exists
-    let user = await User.findOne({ email });
+    if (!firstName || !lastName || !email || !password || !userType) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    // Check if user exists (Sequelize)
+    let user = await User.findOne({ where: { email } });
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Create new user
-    user = new User({
+    // Create new user (Sequelize hooks handle password hashing)
+    user = await User.create({
       firstName,
       lastName,
       email,
@@ -23,10 +51,8 @@ router.post('/register', async (req, res) => {
       userType,
     });
 
-    await user.save();
-
     // Create JWT token
-    const payload = { userId: user._id };
+    const payload = { userId: user.id };
     const token = jwt.sign(payload, process.env.JWT_SECRET || 'secret_key', {
       expiresIn: '7d',
     });
@@ -34,7 +60,7 @@ router.post('/register', async (req, res) => {
     res.json({
       token,
       user: {
-        id: user._id,
+        id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -42,6 +68,9 @@ router.post('/register', async (req, res) => {
       },
     });
   } catch (error) {
+    if (error instanceof UniqueConstraintError) {
+      return res.status(400).json({ message: 'User already exists', error: error.message });
+    }
     res.status(500).json({ message: 'Error registering user', error: error.message });
   }
 });
@@ -56,20 +85,35 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Find user (Sequelize) - normalize email to lowercase
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ where: { email: normalizedEmail } });
+    
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Check if user has a password (shouldn't happen, but safety check)
+    if (!user.password) {
+      console.error('User found but has no password:', user.id);
+      return res.status(500).json({ message: 'Account error. Please contact support.' });
     }
 
     // Check password
-    const isMatch = await user.comparePassword(password);
+    let isMatch = false;
+    try {
+      isMatch = await user.comparePassword(password);
+    } catch (compareError) {
+      console.error('Error comparing password:', compareError);
+      return res.status(500).json({ message: 'Error verifying password. Please try again.' });
+    }
+
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     // Create JWT token
-    const payload = { userId: user._id };
+    const payload = { userId: user.id };
     const token = jwt.sign(payload, process.env.JWT_SECRET || 'secret_key', {
       expiresIn: '7d',
     });
@@ -77,7 +121,7 @@ router.post('/login', async (req, res) => {
     res.json({
       token,
       user: {
-        id: user._id,
+        id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -85,7 +129,21 @@ router.post('/login', async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error logging in', error: error.message });
+    console.error('Login error:', error);
+    console.error('Error stack:', error.stack);
+    
+    // Provide more specific error messages
+    if (error.name === 'SequelizeConnectionError' || error.name === 'SequelizeDatabaseError') {
+      return res.status(500).json({ 
+        message: 'Database connection error. Please try again later.',
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Error logging in. Please try again.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
@@ -108,7 +166,7 @@ router.get('/verify', (req, res) => {
 router.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
       // Don't reveal if user exists for security
@@ -117,7 +175,7 @@ router.post('/forgot-password', async (req, res) => {
 
     // Generate reset token
     const resetToken = jwt.sign(
-      { userId: user._id },
+      { userId: user.id },
       process.env.JWT_SECRET || 'secret_key',
       { expiresIn: '1h' }
     );
@@ -144,13 +202,13 @@ router.post('/reset-password', async (req, res) => {
 
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret_key');
-    const user = await User.findById(decoded.userId);
+    const user = await User.findByPk(decoded.userId);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Update password
+    // Update password (Sequelize hooks will hash on save)
     user.password = newPassword;
     await user.save();
 

@@ -1,0 +1,8 @@
+Hi {{ownerName}},
+
+Your job "{{jobTitle}}" has been featured until {{featuredUntil}}.
+
+View: {{jobUrl}}
+
+Regards,
+{{siteName}} Team

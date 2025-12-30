@@ -5,6 +5,11 @@ const Article = require('../models/Article');
 const ForumPost = require('../models/ForumPost');
 const router = express.Router();
 
+// Sequelize models for payments and jobs
+const Payment = require('../models-sequelize/Payment');
+const SequelizeUser = require('../models-sequelize/User');
+const SequelizeJob = require('../models-sequelize/Job');
+
 // Middleware to check if user is admin
 const isAdmin = async (req, res, next) => {
   try {
@@ -154,6 +159,78 @@ router.get('/forum-posts', isAdmin, async (req, res) => {
     res.json(posts);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching forum posts', error: error.message });
+  }
+});
+
+// Get all payments (Sequelize) - admin only
+router.get('/payments', isAdmin, async (req, res) => {
+  try {
+    const payments = await Payment.findAll({ order: [['createdAt', 'DESC']] });
+    const enriched = await Promise.all(payments.map(async (p) => {
+      const pay = p.toJSON ? p.toJSON() : p;
+      let job = null;
+      if (pay.jobId) {
+        const j = await SequelizeJob.findByPk(pay.jobId);
+        job = j ? j.toJSON() : null;
+      }
+      let user = null;
+      if (pay.userId) {
+        const u = await SequelizeUser.findByPk(pay.userId, { attributes: ['id', 'firstName', 'lastName', 'email'] });
+        user = u ? u.toJSON() : null;
+      }
+      pay.job = job;
+      pay.user = user;
+      return pay;
+    }));
+
+    res.json(enriched);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching payments', error: error.message });
+  }
+});
+
+// Reapply a payment (admin) - re-feature a job if webhook missed
+router.post('/payments/:id/reapply', isAdmin, async (req, res) => {
+  try {
+    const payment = await Payment.findByPk(req.params.id);
+    if (!payment) return res.status(404).json({ message: 'Payment not found' });
+
+    if (!payment.jobId) return res.status(400).json({ message: 'Payment not associated with a job' });
+
+    const job = await SequelizeJob.findByPk(payment.jobId);
+    if (!job) return res.status(404).json({ message: 'Associated job not found' });
+
+    const until = job.featuredUntil ? new Date(job.featuredUntil) : new Date(Date.now() + 7*24*60*60*1000);
+    job.featured = true;
+    job.featuredUntil = until;
+    await job.save();
+
+    res.json({ message: 'Payment reapplied and job featured', job });
+  } catch (error) {
+    res.status(500).json({ message: 'Error reapplying payment', error: error.message });
+  }
+});
+
+// Audit endpoint to mark receipt or owner notification statuses
+router.put('/payments/:id/audit', isAdmin, async (req, res) => {
+  try {
+    const { receiptSent, ownerNotified } = req.body;
+    const payment = await Payment.findByPk(req.params.id);
+    if (!payment) return res.status(404).json({ message: 'Payment not found' });
+
+    if (typeof receiptSent === 'boolean') {
+      payment.receiptSent = receiptSent;
+      payment.receiptSentAt = receiptSent ? new Date() : null;
+    }
+    if (typeof ownerNotified === 'boolean') {
+      payment.ownerNotified = ownerNotified;
+      payment.ownerNotifiedAt = ownerNotified ? new Date() : null;
+    }
+
+    await payment.save();
+    res.json(payment);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating audit fields', error: error.message });
   }
 });
 

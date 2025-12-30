@@ -1,0 +1,6 @@
+.ads-carousel { position: relative; background: #fff; padding: 12px; border-radius: 8px; display:flex; gap:12px; align-items:center; }
+.ads-image { width: 140px; object-fit:cover; border-radius:6px }
+.ads-content { flex:1 }
+.ads-indicators { position:absolute; right:12px; bottom:8px }
+.dot { width:10px; height:10px; border-radius:50%; background:#ddd; border:none; margin:0 4px; }
+.dot.active { background:#333 }

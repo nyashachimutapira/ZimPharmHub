@@ -1,0 +1,8 @@
+Bonjour {{ownerName}},
+
+Votre offre "{{jobTitle}}" a été mise en avant jusqu'au {{featuredUntil}}.
+
+Voir: {{jobUrl}}
+
+Cordialement,
+{{siteName}}

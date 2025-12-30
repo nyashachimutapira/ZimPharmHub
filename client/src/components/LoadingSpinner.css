@@ -6,6 +6,12 @@
   padding: 40px;
 }
 
+.spinner-inline {
+  flex-direction: row;
+  padding: 0;
+  gap: 10px;
+}
+
 .spinner {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #003366;
@@ -14,6 +20,22 @@
   height: 40px;
   animation: spin 1s linear infinite;
   margin-bottom: 15px;
+}
+
+.spinner-inline .spinner {
+  margin-bottom: 0;
+}
+
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.spinner-large {
+  width: 60px;
+  height: 60px;
+  border-width: 6px;
 }
 
 @keyframes spin {
@@ -28,4 +50,9 @@
 .spinner-container p {
   color: #666;
   font-weight: 600;
+  margin: 0;
+}
+
+.spinner-inline p {
+  margin: 0;
 }

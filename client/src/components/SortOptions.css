@@ -1,0 +1,168 @@
+.sort-options {
+  position: relative;
+  display: inline-block;
+}
+
+.sort-container {
+  position: relative;
+}
+
+.sort-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.sort-button:hover {
+  background: #f8f9fa;
+  border-color: #3498db;
+  color: #3498db;
+}
+
+.sort-button.active {
+  background: #3498db;
+  border-color: #3498db;
+  color: white;
+}
+
+.sort-icon {
+  font-size: 12px;
+}
+
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 200px;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sort-option {
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sort-option:hover {
+  background-color: #f8f9fa;
+}
+
+.sort-option.active {
+  background-color: #e8f4f8;
+  color: #3498db;
+  font-weight: 600;
+}
+
+.option-label {
+  flex: 1;
+}
+
+.checkmark {
+  color: #3498db;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.sort-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 0;
+}
+
+.sort-order-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sort-order-btn:hover {
+  background-color: #f8f9fa;
+}
+
+.order-icon {
+  font-size: 16px;
+  margin-left: 8px;
+  color: #3498db;
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .sort-button {
+    padding: 8px 12px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .sort-dropdown {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 300px;
+    margin-top: 0;
+    right: auto;
+    bottom: auto;
+  }
+
+  .sort-option,
+  .sort-order-btn {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+}

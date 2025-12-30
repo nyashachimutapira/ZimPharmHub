@@ -1,0 +1,46 @@
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.badge-pending {
+  background-color: #ffc107;
+}
+
+.badge-reviewing {
+  background-color: #17a2b8;
+}
+
+.badge-shortlisted {
+  background-color: #00bfff;
+}
+
+.badge-interview {
+  background-color: #28a745;
+}
+
+.badge-accepted {
+  background-color: #20c997;
+}
+
+.badge-rejected {
+  background-color: #dc3545;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

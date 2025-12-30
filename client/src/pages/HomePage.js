@@ -4,8 +4,11 @@ import axios from 'axios';
 import { FaBriefcase, FaBox, FaPills, FaUsers, FaNewspaper, FaCalendar } from 'react-icons/fa';
 import './HomePage.css';
 
+const AdsCarouselLazy = React.lazy(() => import('../components/AdsCarousel'));
+
 function HomePage() {
   const [stats, setStats] = useState({ jobs: null, pharmacies: null, members: null, events: null });
+  const videoRef = React.useRef(null);
 
   useEffect(() => {
     let mounted = true;
@@ -17,10 +20,51 @@ function HomePage() {
     return () => { mounted = false; };
   }, []);
 
+  useEffect(() => {
+    // Set video to slow motion (0.5x speed)
+    const video = videoRef.current;
+    if (video) {
+      const setSlowMotion = () => {
+        video.playbackRate = 0.5;
+      };
+      
+      // Set playback rate when video is ready
+      if (video.readyState >= 2) {
+        setSlowMotion();
+      } else {
+        video.addEventListener('loadedmetadata', setSlowMotion);
+        video.addEventListener('canplay', setSlowMotion);
+      }
+
+      // Handle video errors gracefully
+      video.addEventListener('error', (e) => {
+        console.log('Video failed to load, using gradient background fallback');
+      });
+
+      return () => {
+        video.removeEventListener('loadedmetadata', setSlowMotion);
+        video.removeEventListener('canplay', setSlowMotion);
+      };
+    }
+  }, []);
+
   return (
     <div className="home-page">
-      {/* Hero Section */}
+      {/* Hero Section with Video Background */}
       <section className="hero">
+        <video
+          ref={videoRef}
+          className="hero-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+        >
+          <source src="/videos/pharmacy-background.mp4" type="video/mp4" />
+          <source src="/videos/pharmacy-background.webm" type="video/webm" />
+          {/* Fallback if video doesn't load */}
+        </video>
+        <div className="hero-overlay"></div>
         <div className="hero-content">
           <h1>Welcome to ZimPharmHub</h1>
           <p>Your Gateway to Pharmacy Opportunities, Products & Community in Zimbabwe</p>
@@ -81,6 +125,17 @@ function HomePage() {
             <Link to="/events">View Events →</Link>
           </div>
         </div>
+
+        {/* Ads carousel (featured) */}
+        <div style={{ marginTop: 20 }}>
+          <h3>Featured</h3>
+          <div>
+            {/* Lazy load with dynamic import for performance */}
+            <React.Suspense fallback={<div>Loading featured ads…</div>}>
+              <AdsCarouselLazy />
+            </React.Suspense>
+          </div>
+        </div>
       </section>
 
       {/* Stats Section */}
@@ -120,3 +175,4 @@ function HomePage() {
 }
 
 export default HomePage;
+

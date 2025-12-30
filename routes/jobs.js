@@ -8,6 +8,8 @@ const { Op } = require('sequelize');
 const Job = require('../models-sequelize/Job');
 const JobApplication = require('../models-sequelize/JobApplication');
 const User = require('../models-sequelize/User');
+const Newsletter = require('../models/Newsletter');
+const { notifySubscribers } = require('../utils/mailer');
 
 const multer = require('multer');
 
@@ -104,8 +106,23 @@ router.get('/:id', async (req, res) => {
 // Create job (Sequelize)
 router.post('/', async (req, res) => {
   try {
-    const { title, description, position, salary, location, requirements, responsibilities, employmentType } = req.body;
+    const { title, description, position, salary, location, requirements, responsibilities, employmentType, featured, featuredUntil, expiresAt } = req.body;
     const userId = req.headers['user-id'];
+
+    // Basic validation
+    if (!title || !description) return res.status(400).json({ message: 'Title and description are required' });
+
+    // If featured is requested, ensure featuredUntil is a valid future date
+    if (featured && featuredUntil) {
+      const until = new Date(featuredUntil);
+      if (isNaN(until.getTime())) return res.status(400).json({ message: 'Invalid featuredUntil date' });
+    }
+
+    // If expiresAt is provided ensure valid date
+    if (expiresAt) {
+      const expires = new Date(expiresAt);
+      if (isNaN(expires.getTime())) return res.status(400).json({ message: 'Invalid expiresAt date' });
+    }
 
     const jobData = {
       title,
@@ -121,12 +138,23 @@ router.post('/', async (req, res) => {
       responsibilities: responsibilities || [],
       employmentType,
       pharmacyId: userId,
+      featured: !!featured,
+      featuredUntil: featuredUntil ? new Date(featuredUntil) : null,
+      expiresAt: expiresAt ? new Date(expiresAt) : null
     };
 
     const job = await Job.create(jobData);
 
-    // Note: Saved-search alerts are disabled until migrated to Sequelize.
-    console.log('ℹ️ Saved-search alerts are disabled (pending migration).');
+    // Send email alerts to newsletter subscribers who opted into job alerts
+    try {
+      const jobUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/jobs/${job.id}`;
+      const subject = `New job posted: ${job.title}`;
+      const text = `A new job has been posted: ${job.title} at ${job.locationCity || 'Unknown'}. View: ${jobUrl}`;
+      const html = `<p>A new job has been posted:</p><h3>${job.title}</h3><p>${job.description || ''}</p><p><a href="${jobUrl}">View job</a></p>`;
+      notifySubscribers('jobs', subject, text, html);
+    } catch (notifyErr) {
+      console.warn('Failed to notify subscribers about new job:', notifyErr.message);
+    }
 
     res.status(201).json(job);
   } catch (error) {
@@ -142,6 +170,53 @@ router.put('/:id', async (req, res) => {
     res.json(updatedRows[0]);
   } catch (error) {
     res.status(500).json({ message: 'Error updating job', error: error.message });
+  }
+});
+
+// Set featured/unfeatured (admin or owner)
+router.put('/:id/feature', async (req, res) => {
+  try {
+    const userId = req.headers['user-id'];
+    const { featured, featuredUntil } = req.body;
+
+    const job = await Job.findByPk(req.params.id);
+    if (!job) return res.status(404).json({ message: 'Job not found' });
+
+    // Allow if admin or the job owner (pharmacy)
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(401).json({ message: 'Authentication required' });
+    if (user.userType !== 'admin' && job.pharmacyId !== userId) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    job.featured = !!featured;
+    job.featuredUntil = featuredUntil ? new Date(featuredUntil) : null;
+    await job.save();
+
+    res.json(job);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating featured status', error: error.message });
+  }
+});
+
+// Close job manually (admin or owner)
+router.put('/:id/close', async (req, res) => {
+  try {
+    const userId = req.headers['user-id'];
+    const job = await Job.findByPk(req.params.id);
+    if (!job) return res.status(404).json({ message: 'Job not found' });
+
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(401).json({ message: 'Authentication required' });
+    if (user.userType !== 'admin' && job.pharmacyId !== userId) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    job.status = 'closed';
+    await job.save();
+    res.json({ message: 'Job closed', job });
+  } catch (error) {
+    res.status(500).json({ message: 'Error closing job', error: error.message });
   }
 });
 
@@ -161,17 +236,37 @@ router.post('/:id/apply', upload.single('resume'), async (req, res) => {
   try {
     const userId = req.headers['user-id'];
     const coverLetter = req.body.coverLetter || '';
+    
+    // Validate userId
+    if (!userId) {
+      return res.status(401).json({ message: 'User authentication required' });
+    }
+
+    // Check if resume is provided
+    if (!req.file && !req.body.resume) {
+      return res.status(400).json({ message: 'Resume file is required' });
+    }
+
     const job = await Job.findByPk(req.params.id);
 
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
     }
 
+    // Check if user exists
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     // Prevent duplicate applications (unique index on user_id + job_id in model)
     try {
       let resumePath = null;
-      if (req.file) resumePath = `/uploads/resumes/${req.file.filename}`;
-      else if (req.body.resume) resumePath = req.body.resume;
+      if (req.file) {
+        resumePath = `/uploads/resumes/${req.file.filename}`;
+      } else if (req.body.resume) {
+        resumePath = req.body.resume;
+      }
 
       const application = await JobApplication.create({
         userId,
@@ -182,17 +277,28 @@ router.post('/:id/apply', upload.single('resume'), async (req, res) => {
       });
 
       // NOTE: Notifications currently not implemented in Postgres. Placeholder log:
-      console.log(`Notification placeholder: New application for job ${job.id} by user ${userId}`);
+      console.log(`✅ New application for job ${job.id} by user ${userId}`);
 
-      res.json({ message: 'Application submitted', application });
+      res.json({ 
+        message: 'Application submitted successfully', 
+        application: {
+          id: application.id,
+          status: application.status,
+          appliedAt: application.appliedAt
+        }
+      });
     } catch (err) {
       // Sequelize unique constraint violation (already applied)
-      if (err.name === 'SequelizeUniqueConstraintError') {
-        return res.status(400).json({ message: 'Already applied for this job' });
+      if (err.name === 'SequelizeUniqueConstraintError' || err.name === 'SequelizeValidationError') {
+        if (err.errors && err.errors.some(e => e.type === 'unique violation')) {
+          return res.status(400).json({ message: 'You have already applied for this job' });
+        }
+        return res.status(400).json({ message: err.message || 'Validation error' });
       }
       throw err;
     }
   } catch (error) {
+    console.error('Error applying for job:', error);
     res.status(500).json({ message: 'Error applying for job', error: error.message });
   }
 });

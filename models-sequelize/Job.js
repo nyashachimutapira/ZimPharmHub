@@ -86,6 +86,11 @@ const Job = sequelize.define('Job', {
     allowNull: true,
     field: 'featured_until'
   },
+  expiresAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+    field: 'expires_at'
+  },
   views: {
     type: DataTypes.INTEGER,
     defaultValue: 0

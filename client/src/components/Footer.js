@@ -29,7 +29,7 @@ function Footer() {
           <div className="footer-section">
             <h4>For Businesses</h4>
             <ul>
-              <li><Link to="/jobs">Post a Job</Link></li>
+              <li><Link to="/post-job">Post a Job</Link></li>
               <li><Link to="/products">List Products</Link></li>
               <li><Link to="/contact">Contact Us</Link></li>
               <li><Link to="/register">Sign Up</Link></li>
@@ -46,6 +46,45 @@ function Footer() {
           </div>
 
           <div className="footer-section">
+            <h4>Regulatory</h4>
+            <ul>
+              <li>
+                <a 
+                  href="https://mcz.org.zw" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="mcz-link"
+                >
+                  Medical Council of Zimbabwe (MCZ)
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://mcz.org.zw/search-register" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="mcz-link"
+                >
+                  Verify Practitioners
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://pharmacycouncil.co.zw" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="mcz-link"
+                >
+                  Pharmacy Council of Zimbabwe
+                </a>
+              </li>
+            </ul>
+            <p className="regulatory-text">
+              Regulated by the Medical Council of Zimbabwe (MCZ) and Pharmacy Council of Zimbabwe
+            </p>
+          </div>
+
+          <div className="footer-section">
             <h4>Follow Us</h4>
             <div className="social-icons">
               <a href="#"><FaFacebook /></a>
@@ -58,6 +97,26 @@ function Footer() {
 
         <div className="footer-bottom">
           <p>&copy; {year} ZimPharmHub. All rights reserved.</p>
+          <p className="regulatory-notice">
+            Verify practitioners with{' '}
+            <a 
+              href="https://mcz.org.zw" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="mcz-link"
+            >
+              Medical Council of Zimbabwe (MCZ)
+            </a>
+            {' '}and{' '}
+            <a 
+              href="https://pharmacycouncil.co.zw" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="mcz-link"
+            >
+              Pharmacy Council of Zimbabwe
+            </a>
+          </p>
         </div>
       </div>
     </footer>

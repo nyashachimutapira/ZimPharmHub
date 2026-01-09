@@ -51,7 +51,8 @@ A comprehensive pharmacy job board, product listing, and community platform for 
 
 ### Backend
 - Node.js & Express.js
-- MongoDB
+- Vercel Postgres (PostgreSQL)
+- Sequelize ORM
 - JWT Authentication
 - Stripe for payments
 - Nodemailer for email
@@ -67,7 +68,7 @@ A comprehensive pharmacy job board, product listing, and community platform for 
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- MongoDB installed and running
+- Vercel Postgres database (or local PostgreSQL)
 - Stripe account (optional, for payment features)
 
 ### Backend Setup
@@ -83,28 +84,23 @@ cd ZimPharmHub
 npm install
 ```
 
-3. Create `.env` file
+3. Create `.env` file with Vercel Postgres connection
 ```bash
-cp .env.example .env
-```
-
-4. Configure environment variables in `.env`
-```
-MONGODB_URI=mongodb://localhost:27017/zimpharmhub
-JWT_SECRET=your_secret_key_here
+cat > .env << EOF
+DATABASE_URL=postgres://your-user:password@your-vercel-host/your-database
 PORT=5000
+NODE_ENV=development
+JWT_SECRET=your_secret_key_here
 STRIPE_SECRET_KEY=your_stripe_key
+EOF
 ```
 
-5. Start MongoDB
-```bash
-mongod
-```
-
-6. Run the server
+4. Run the server
 ```bash
 npm run server
 ```
+
+See **ENV_SETUP.md** for detailed environment variable configuration and **VERCEL_POSTGRES_MIGRATION.md** for migration from other databases.
 
 ### Frontend Setup
 

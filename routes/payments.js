@@ -4,7 +4,7 @@ const router = express.Router();
 const Job = require('../models-sequelize/Job');
 const Payment = require('../models-sequelize/Payment');
 const SequelizeUser = require('../models-sequelize/User');
-const { sendEmail } = require('../utils/mailer');
+const { sendEmail, sendReceiptEmail, sendOwnerNotification } = require('../utils/mailer');
 
 // Create payment intent
 router.post('/create-payment-intent', async (req, res) => {

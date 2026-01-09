@@ -16,7 +16,7 @@ if (process.env.USE_MONGODB === 'true' && process.env.MONGODB_URI) {
   console.log('ℹ️ MongoDB disabled. Set USE_MONGODB=true and MONGODB_URI to enable legacy Mongo features.');
 }
 
-// PostgreSQL Database Connection
+// Vercel Postgres Database Connection
 const sequelize = require('./config/database');
 
 const path = require('path');
@@ -35,11 +35,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Test Database Connection
 sequelize.authenticate()
   .then(() => {
-    console.log('✅ PostgreSQL connected successfully');
+    console.log('✅ Vercel Postgres connected successfully');
     
-    // Sync models in development (create tables if they don't exist)
-    if (process.env.NODE_ENV === 'development') {
-      sequelize.sync({ alter: false })
+    // Sync models (alter: true only in development, disabled in production)
+     if (process.env.NODE_ENV === 'development') {
+      sequelize.sync({ 
+        alter: process.env.NODE_ENV === 'development',
+        force: false 
+      })
         .then(() => {
           console.log('✅ Database models synchronized');
           // Start job scheduler in development/production - handles expirations and un-featuring
@@ -62,14 +65,15 @@ sequelize.authenticate()
     }
   })
   .catch(err => {
-    console.error('❌ PostgreSQL connection error:', err.message);
+    console.error('❌ Vercel Postgres connection error:', err.message);
     console.log('⚠️  Server will continue but database features may not work');
-    console.log('💡 Check your .env file and make sure PostgreSQL is running');
+    console.log('💡 Check your .env file for DATABASE_URL and verify Vercel Postgres is running');
   });
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jobs', require('./routes/jobs'));
+app.use('/api/interviews', require('./routes/interviews'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/pharmacies', require('./routes/pharmacies'));
 app.use('/api/users', require('./routes/users'));
@@ -85,8 +89,6 @@ app.use('/api/ads', require('./routes/ads'));
 app.use('/api/uploads', require('./routes/uploads'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/stats', require('./routes/stats'));
-// Uploads (images/files)
-app.use('/api/uploads', require('./routes/uploads'));
 
 // Saved searches are disabled until migrated to PostgreSQL/Sequelize
 // app.use('/api/saved-searches', require('./routes/savedSearches'));
@@ -100,6 +102,8 @@ app.use('/api/job-alerts', require('./routes/jobAlerts'));
 // Advanced search and filters
 app.use('/api', require('./routes/advancedSearch'));
 
+app.use('/api/analytics', require('./routes/analytics'));
+
 // Dashboard
 app.use('/api/dashboard', require('./routes/dashboard'));
 
@@ -107,7 +111,7 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.get('/api/health', (req, res) => {
   res.json({ 
     message: 'ZimPharmHub API is running',
-    database: 'PostgreSQL',
+    database: 'Vercel Postgres',
     timestamp: new Date().toISOString()
   });
 });

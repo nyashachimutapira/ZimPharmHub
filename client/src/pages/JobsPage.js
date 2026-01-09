@@ -6,6 +6,8 @@ import SalaryRangeSlider from '../components/SalaryRangeSlider';
 import SortOptions from '../components/SortOptions';
 import SavedFiltersPanel from '../components/SavedFiltersPanel';
 import SearchBar from '../components/SearchBar';
+import JobRecommendations from '../components/JobRecommendations';
+import SaveJobButton from '../components/SaveJobButton';
 import './JobsPage.css';
 
 function JobsPage() {
@@ -191,6 +193,9 @@ function JobsPage() {
 
           {/* Main Content */}
           <main className="jobs-main">
+            {/* AI Recommendations */}
+            <JobRecommendations />
+
             {/* Results Header */}
             <div className="results-header">
               <div className="results-info">
@@ -243,38 +248,48 @@ function JobsPage() {
               <>
                 <div className="jobs-list">
                   {jobs.map((job) => (
-                    <Link key={job.id || job._id} to={`/jobs/${job.id || job._id}`} className="job-card">
-                      <div className="job-card-header">
-                        <div className="job-title-badge">
-                          <h3>{job.title}</h3>
-                          {job.featured && <span className="featured-badge">⭐ Featured</span>}
+                    <div key={job.id || job._id} className="job-card-wrapper">
+                      <Link to={`/jobs/${job.id || job._id}`} className="job-card">
+                        <div className="job-card-header">
+                          <div className="job-title-badge">
+                            <h3>{job.title}</h3>
+                            {job.featured && <span className="featured-badge">⭐ Featured</span>}
+                          </div>
+                          <div className="job-actions" onClick={(e) => e.preventDefault()}>
+                            <SaveJobButton
+                              jobId={job.id || job._id}
+                              userId={userId}
+                              size="small"
+                              showText={false}
+                            />
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="job-meta">
-                        <span className="job-position">{job.position}</span>
-                        <span className="job-type">{job.employmentType}</span>
-                      </div>
+                        <div className="job-meta">
+                          <span className="job-position">{job.position}</span>
+                          <span className="job-type">{job.employmentType}</span>
+                        </div>
 
-                      <p className="job-pharmacy">
-                        {job.pharmacy?.firstName} {job.pharmacy?.lastName}
-                      </p>
+                        <p className="job-pharmacy">
+                          {job.pharmacy?.firstName} {job.pharmacy?.lastName}
+                        </p>
 
-                      <div className="job-details">
-                        <span className="location">
-                          📍 {job.locationCity || 'N/A'}, {job.locationProvince || 'N/A'}
-                        </span>
-                        <span className="salary">
-                          💰 {job.salaryMin ? `ZWL ${job.salaryMin}` : 'N/A'} - {job.salaryMax ? `ZWL ${job.salaryMax}` : 'N/A'}
-                        </span>
-                      </div>
+                        <div className="job-details">
+                          <span className="location">
+                            📍 {job.locationCity || 'N/A'}, {job.locationProvince || 'N/A'}
+                          </span>
+                          <span className="salary">
+                            💰 {job.salaryMin ? `ZWL ${job.salaryMin}` : 'N/A'} - {job.salaryMax ? `ZWL ${job.salaryMax}` : 'N/A'}
+                          </span>
+                        </div>
 
-                      <div className="job-footer">
-                        <small className="posted-date">
-                          {job.createdAt && `Posted ${new Date(job.createdAt).toLocaleDateString()}`}
-                        </small>
-                      </div>
-                    </Link>
+                        <div className="job-footer">
+                          <small className="posted-date">
+                            {job.createdAt && `Posted ${new Date(job.createdAt).toLocaleDateString()}`}
+                          </small>
+                        </div>
+                      </Link>
+                    </div>
                   ))}
                 </div>
 

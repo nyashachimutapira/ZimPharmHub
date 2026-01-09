@@ -13,7 +13,7 @@ cd "C:\Users\Bishop Nyasha\OneDrive\ZimPharmHub\ZimPharmHub"
 
 ## Step 2: Check if .env File Exists
 
-Make sure you have a `.env` file in the root directory. If not, create it with PostgreSQL settings (see ENV_SETUP.md).
+Make sure you have a `.env` file in the root directory with your Vercel Postgres connection string (see ENV_SETUP.md).
 
 ## Step 3: Start the Server
 
@@ -78,9 +78,9 @@ PORT=5001
 
 ### Issue 3: "Database connection error"
 **Solution:**
-- Make sure PostgreSQL is running
-- Check `.env` file has correct database credentials
-- Verify database exists: `psql -U zimpharmuser -d zimpharmhub`
+- Check `.env` file has correct `DATABASE_URL`
+- Verify Vercel Postgres is running (check Vercel dashboard)
+- Test connection: `node -e "require('dotenv').config(); const sequelize = require('./config/database'); sequelize.authenticate().then(() => console.log('✅ Connected')).catch(e => console.log('❌', e.message));"`
 
 ### Issue 4: Frontend won't start
 **Solution:**
@@ -100,19 +100,16 @@ node --version
 # Check if npm is installed
 npm --version
 
-# Check if PostgreSQL is running (Windows)
-# Open Services (Win+R, type services.msc)
-# Look for "postgresql-x64-XX" service
-
-# Check database connection
-psql -U zimpharmuser -d zimpharmhub -c "SELECT version();"
+# Test Vercel Postgres connection
+node -e "require('dotenv').config(); const s = require('./config/database'); s.authenticate().then(() => console.log('✅ DB OK')).catch(e => console.log('❌', e.message));"
 ```
 
 ## Still Having Issues?
 
 1. Check terminal/console for error messages
 2. Make sure all dependencies are installed
-3. Verify your `.env` file is correct
-4. Ensure PostgreSQL is running
-5. Try restarting your terminal/computer
+3. Verify your `.env` file has `DATABASE_URL`
+4. Check Vercel dashboard to ensure Postgres is active
+5. Try restarting your terminal
+6. See **VERCEL_POSTGRES_MIGRATION.md** for detailed database setup
 

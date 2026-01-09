@@ -2,6 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FaBriefcase, FaBox, FaPills, FaUsers, FaNewspaper, FaCalendar } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import ScrollAnimation from '../components/ScrollAnimation';
+import AnimatedCounter from '../components/AnimatedCounter';
+import ParticleBackground from '../components/ParticleBackground';
+import Typewriter from '../components/Typewriter';
+import Button from '../components/Button';
+import GlassCard from '../components/GlassCard';
+import FloatingActionButton from '../components/FloatingActionButton';
 import './HomePage.css';
 
 const AdsCarouselLazy = React.lazy(() => import('../components/AdsCarousel'));
@@ -52,6 +60,7 @@ function HomePage() {
     <div className="home-page">
       {/* Hero Section with Video Background */}
       <section className="hero">
+        <ParticleBackground particleCount={30} />
         <video
           ref={videoRef}
           className="hero-video"
@@ -66,113 +75,243 @@ function HomePage() {
         </video>
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <h1>Welcome to ZimPharmHub</h1>
-          <p>Your Gateway to Pharmacy Opportunities, Products & Community in Zimbabwe</p>
-          <div className="hero-buttons">
-            <Link to="/jobs" className="btn btn-primary">
-              Browse Jobs
-            </Link>
-            <Link to="/register" className="btn btn-secondary">
-              Get Started
-            </Link>
-          </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            Welcome to <span className="highlight">ZimPharmHub</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <Typewriter
+              texts={[
+                "Your Gateway to Pharmacy Opportunities",
+                "Connect with Pharmacy Professionals",
+                "Discover Premium Pharmacy Products",
+                "Join Zimbabwe's Pharmacy Community"
+              ]}
+              typeSpeed={80}
+              deleteSpeed={40}
+              pauseTime={3000}
+            />
+          </motion.p>
+          <motion.div
+            className="hero-buttons"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            <Button variant="primary" size="large">
+              <Link to="/jobs">Browse Jobs</Link>
+            </Button>
+            <Button variant="outline" size="large">
+              <Link to="/register">Get Started</Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="features container">
-        <h2>What We Offer</h2>
+        <ScrollAnimation animation="fadeUp">
+          <h2>What We Offer</h2>
+        </ScrollAnimation>
         <div className="features-grid">
-          <div className="feature-card">
-            <FaBriefcase className="feature-icon" />
-            <h3>Job Opportunities</h3>
-            <p>Find the latest pharmacy and dispensary assistant positions</p>
-            <Link to="/jobs">Explore Jobs →</Link>
-          </div>
+          <ScrollAnimation animation="fadeUp" delay={0.1}>
+            <GlassCard className="feature-card">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FaBriefcase className="feature-icon" />
+                <h3>Job Opportunities</h3>
+                <p>Find the latest pharmacy and dispensary assistant positions</p>
+                <Link to="/jobs">Explore Jobs →</Link>
+              </motion.div>
+            </GlassCard>
+          </ScrollAnimation>
 
-          <div className="feature-card">
-            <FaBox className="feature-icon" />
-            <h3>Product Listings</h3>
-            <p>Browse and discover pharmacy products and services</p>
-            <Link to="/products">View Products →</Link>
-          </div>
+          <ScrollAnimation animation="fadeUp" delay={0.2}>
+            <GlassCard className="feature-card">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FaBox className="feature-icon" />
+                <h3>Product Listings</h3>
+                <p>Browse and discover pharmacy products and services</p>
+                <Link to="/products">View Products →</Link>
+              </motion.div>
+            </GlassCard>
+          </ScrollAnimation>
 
-          <div className="feature-card">
-            <FaPills className="feature-icon" />
-            <h3>Pharmacy Profiles</h3>
-            <p>Connect with verified pharmacies across Zimbabwe</p>
-            <Link to="/pharmacies">Find Pharmacies →</Link>
-          </div>
+          <ScrollAnimation animation="fadeUp" delay={0.3}>
+            <GlassCard className="feature-card">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FaPills className="feature-icon" />
+                <h3>Pharmacy Profiles</h3>
+                <p>Connect with verified pharmacies across Zimbabwe</p>
+                <Link to="/pharmacies">Find Pharmacies →</Link>
+              </motion.div>
+            </GlassCard>
+          </ScrollAnimation>
 
-          <div className="feature-card">
-            <FaUsers className="feature-icon" />
-            <h3>Community Forum</h3>
-            <p>Network with pharmacy professionals and share experiences</p>
-            <Link to="/forum">Join Forum →</Link>
-          </div>
+          <ScrollAnimation animation="fadeUp" delay={0.4}>
+            <GlassCard className="feature-card">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FaUsers className="feature-icon" />
+                <h3>Community Forum</h3>
+                <p>Network with pharmacy professionals and share experiences</p>
+                <Link to="/forum">Join Forum →</Link>
+              </motion.div>
+            </GlassCard>
+          </ScrollAnimation>
 
-          <div className="feature-card">
-            <FaNewspaper className="feature-icon" />
-            <h3>Resource Hub</h3>
-            <p>Articles, guides, and training opportunities</p>
-            <Link to="/articles">Read Resources →</Link>
-          </div>
+          <ScrollAnimation animation="fadeUp" delay={0.5}>
+            <GlassCard className="feature-card">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FaNewspaper className="feature-icon" />
+                <h3>Resource Hub</h3>
+                <p>Articles, guides, and training opportunities</p>
+                <Link to="/articles">Read Resources →</Link>
+              </motion.div>
+            </GlassCard>
+          </ScrollAnimation>
 
-          <div className="feature-card">
-            <FaCalendar className="feature-icon" />
-            <h3>Events Calendar</h3>
-            <p>Stay updated on pharmacy events and conferences</p>
-            <Link to="/events">View Events →</Link>
-          </div>
+          <ScrollAnimation animation="fadeUp" delay={0.6}>
+            <GlassCard className="feature-card">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <FaCalendar className="feature-icon" />
+                <h3>Events Calendar</h3>
+                <p>Stay updated on pharmacy events and conferences</p>
+                <Link to="/events">View Events →</Link>
+              </motion.div>
+            </GlassCard>
+          </ScrollAnimation>
         </div>
 
         {/* Ads carousel (featured) */}
-        <div style={{ marginTop: 20 }}>
-          <h3>Featured</h3>
-          <div>
-            {/* Lazy load with dynamic import for performance */}
-            <React.Suspense fallback={<div>Loading featured ads…</div>}>
-              <AdsCarouselLazy />
-            </React.Suspense>
+        <ScrollAnimation animation="fadeUp" delay={0.7}>
+          <div style={{ marginTop: 20 }}>
+            <h3>Featured</h3>
+            <div>
+              {/* Lazy load with dynamic import for performance */}
+              <React.Suspense fallback={<div>Loading featured ads…</div>}>
+                <AdsCarouselLazy />
+              </React.Suspense>
+            </div>
           </div>
-        </div>
+        </ScrollAnimation>
       </section>
 
       {/* Stats Section */}
       <section className="stats">
         <div className="container">
-          <div className="stat">
-            <h3>{stats.jobs !== null ? stats.jobs : '—'}</h3>
-            <p>Active Job Listings</p>
-          </div>
-          <div className="stat">
-            <h3>{stats.pharmacies !== null ? stats.pharmacies : '—'}</h3>
-            <p>Registered Pharmacies</p>
-          </div>
-          <div className="stat">
-            <h3>{stats.members !== null ? stats.members : '—'}</h3>
-            <p>Community Members</p>
-          </div>
-          <div className="stat">
-            <h3>{stats.events !== null ? stats.events : '—'}</h3>
-            <p>Monthly Events</p>
-          </div>
+          <ScrollAnimation animation="scale" delay={0.1}>
+            <div className="stat">
+              <AnimatedCounter
+                end={stats.jobs || 1000}
+                suffix="+"
+                duration={2}
+              />
+              <p>Active Job Listings</p>
+            </div>
+          </ScrollAnimation>
+          <ScrollAnimation animation="scale" delay={0.2}>
+            <div className="stat">
+              <AnimatedCounter
+                end={stats.pharmacies || 500}
+                suffix="+"
+                duration={2}
+                delay={0.2}
+              />
+              <p>Registered Pharmacies</p>
+            </div>
+          </ScrollAnimation>
+          <ScrollAnimation animation="scale" delay={0.3}>
+            <div className="stat">
+              <AnimatedCounter
+                end={stats.members || 5000}
+                suffix="+"
+                duration={2}
+                delay={0.4}
+              />
+              <p>Community Members</p>
+            </div>
+          </ScrollAnimation>
+          <ScrollAnimation animation="scale" delay={0.4}>
+            <div className="stat">
+              <AnimatedCounter
+                end={stats.events || 12}
+                suffix="+"
+                duration={2}
+                delay={0.6}
+              />
+              <p>Monthly Events</p>
+            </div>
+          </ScrollAnimation>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="cta">
-        <div className="container">
-          <h2>Ready to Join ZimPharmHub?</h2>
-          <p>Create an account today and unlock all features</p>
-          <Link to="/register" className="btn btn-primary">
-            Create Account
-          </Link>
-        </div>
+        <ScrollAnimation animation="fadeUp">
+          <div className="container">
+            <h2>Ready to Join ZimPharmHub?</h2>
+            <p>Create an account today and unlock all features</p>
+            <Button variant="primary" size="large">
+              <Link to="/register">Create Account</Link>
+            </Button>
+          </div>
+        </ScrollAnimation>
       </section>
+
+      {/* Floating Action Button */}
+      <FloatingActionButton
+        icon="💊"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        tooltip="Back to Top"
+        position="bottom-right"
+        variant="pharmacy"
+        actions={[
+          {
+            id: 'jobs',
+            icon: '💼',
+            label: 'Browse Jobs',
+            onClick: () => window.location.href = '/jobs'
+          },
+          {
+            id: 'register',
+            icon: '👤',
+            label: 'Join Now',
+            onClick: () => window.location.href = '/register'
+          },
+          {
+            id: 'forum',
+            icon: '💬',
+            label: 'Forum',
+            onClick: () => window.location.href = '/forum'
+          }
+        ]}
+      />
     </div>
   );
 }
 
 export default HomePage;
-

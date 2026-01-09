@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaPlus } from 'react-icons/fa';
 import Notifications from './Notifications';
 import './Navbar.css';
 import { useAuth } from '../context/AuthContext';
+import { ThemeContext } from '../context/ThemeContext';
 
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
+  const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -23,6 +25,12 @@ function Navbar() {
     <nav className="navbar">
       <div className="container navbar-container">
         <Link to="/" className="navbar-logo">
+          <svg className="logo-icon" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="10"/>
+            <rect x="10.5" y="6" width="3" height="12"/>
+            <rect x="6" y="10.5" width="12" height="3"/>
+            <circle cx="12" cy="12" r="1.5"/>
+          </svg>
           ZimPharmHub
         </Link>
 
@@ -55,6 +63,14 @@ function Navbar() {
             Contact
           </Link>
           
+          <button 
+            onClick={toggleDarkMode} 
+            className="nav-link btn-theme-toggle" 
+            title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          >
+            {isDarkMode ? <FaSun /> : <FaMoon />}
+          </button>
+
           {isAuthenticated ? (
             <>
               <Notifications userId={user?.id} />

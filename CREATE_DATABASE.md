@@ -158,3 +158,4 @@ If you get errors:
 4. Check the `SETUP_INSTRUCTIONS.md` file for detailed troubleshooting
 
 
+

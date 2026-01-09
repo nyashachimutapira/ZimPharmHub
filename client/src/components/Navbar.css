@@ -31,6 +31,21 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: #00A8FF;
+  transition: all 0.3s ease;
+}
+
+.navbar-logo:hover .logo-icon {
+  transform: scale(1.1);
+  color: #ffffff;
 }
 
 .navbar-logo:hover {
@@ -100,6 +115,20 @@
 .btn-nav-primary:hover {
   background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   box-shadow: 0 6px 12px -1px rgba(0, 0, 0, 0.2);
+}
+
+.btn-theme-toggle {
+  font-size: 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
 }
 
 .hamburger {

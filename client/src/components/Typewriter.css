@@ -1,0 +1,39 @@
+/* Typewriter Effect Styles */
+.typewriter {
+  position: relative;
+  display: inline-block;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 1s infinite;
+  color: var(--primary-color);
+  font-weight: normal;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .typewriter-cursor {
+    margin-left: 1px;
+  }
+}
+
+/* Respect user preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-cursor {
+    animation: none;
+    opacity: 0.5;
+  }
+}

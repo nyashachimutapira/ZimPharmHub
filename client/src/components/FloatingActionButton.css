@@ -1,0 +1,266 @@
+/* Floating Action Button (FAB) Styles */
+.fab-container {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.fab-bottom-right {
+  bottom: 24px;
+  right: 24px;
+}
+
+.fab-bottom-left {
+  bottom: 24px;
+  left: 24px;
+}
+
+.fab-top-right {
+  top: 24px;
+  right: 24px;
+}
+
+.fab-top-left {
+  top: 24px;
+  left: 24px;
+}
+
+/* Main FAB Button */
+.fab-main {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  outline: none;
+}
+
+.fab-main.fab-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+}
+
+.fab-main.fab-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.fab-main.fab-success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.fab-main.fab-danger {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+}
+
+.fab-main.fab-small {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+}
+
+.fab-main.fab-large {
+  width: 72px;
+  height: 72px;
+  font-size: 28px;
+}
+
+/* Ripple effect */
+.fab-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.fab-main:active .fab-ripple {
+  animation: fab-ripple 0.6s ease-out;
+}
+
+@keyframes fab-ripple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}
+
+/* Pulse effect */
+.fab-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  animation: fab-pulse 2s infinite;
+  opacity: 0;
+}
+
+@keyframes fab-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Action buttons */
+.fab-action {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  background: var(--bg-secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  outline: none;
+  overflow: hidden;
+}
+
+.fab-action.fab-small {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.fab-action.fab-large {
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+}
+
+.fab-action-label {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 12px;
+  padding: 8px 12px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fab-action:hover .fab-action-label {
+  opacity: 1;
+}
+
+/* Tooltip */
+.fab-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+}
+
+.fab-main:hover + .fab-tooltip,
+.fab-container:hover .fab-tooltip {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .fab-container {
+    bottom: 16px;
+    right: 16px;
+    gap: 8px;
+  }
+
+  .fab-main {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+
+  .fab-main.fab-large {
+    width: 64px;
+    height: 64px;
+    font-size: 24px;
+  }
+
+  .fab-action {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .fab-main.fab-secondary {
+    background: #333;
+    color: var(--text-primary);
+  }
+
+  .fab-action {
+    background: #333;
+  }
+
+  .fab-tooltip,
+  .fab-action-label {
+    background: #333;
+    color: var(--text-primary);
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .fab-pulse {
+    animation: none;
+  }
+
+  .fab-ripple {
+    animation: none;
+  }
+}

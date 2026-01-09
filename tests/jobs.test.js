@@ -17,6 +17,13 @@ describe('Jobs API', () => {
   test('POST /api/jobs creates job with featured and expiresAt', async () => {
     const user = await User.create({ firstName: 'Pharm', lastName: 'Owner', email: 'pharm@example.com', password: 'password', userType: 'pharmacy' });
 
+    // Login to get token
+    const loginRes = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'pharm@example.com', password: 'password' })
+      .expect(200);
+    const token = loginRes.body.token;
+
     const payload = {
       title: 'Test Pharmacist',
       description: 'Test job',
@@ -32,7 +39,7 @@ describe('Jobs API', () => {
 
     const res = await request(app)
       .post('/api/jobs')
-      .set('user-id', user.id)
+      .set('Authorization', `Bearer ${token}`)
       .send(payload)
       .expect(201);
 
@@ -75,20 +82,34 @@ describe('Jobs API', () => {
       status: 'active'
     });
 
+    // Owner login
+    const ownerLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'own@example.com', password: 'password' })
+      .expect(200);
+    const ownerToken = ownerLogin.body.token;
+
     // Owner sets featured
     await request(app)
       .put(`/api/jobs/${job.id}/feature`)
-      .set('user-id', owner.id)
+      .set('Authorization', `Bearer ${ownerToken}`)
       .send({ featured: true, featuredUntil: new Date(Date.now() + 2 * 24 * 3600 * 1000).toISOString() })
       .expect(200);
 
     const updated = await Job.findByPk(job.id);
     expect(updated.featured).toBe(true);
 
+    // Admin login
+    const adminLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'admin2@example.com', password: 'password' })
+      .expect(200);
+    const adminToken = adminLogin.body.token;
+
     // Admin can unfeature
     await request(app)
       .put(`/api/jobs/${job.id}/feature`)
-      .set('user-id', admin.id)
+      .set('Authorization', `Bearer ${adminToken}`)
       .send({ featured: false })
       .expect(200);
 

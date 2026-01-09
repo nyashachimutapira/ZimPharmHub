@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 const { Op } = require('sequelize');
+const { auth } = require('../middleware/auth');
 
 // Use Sequelize models (Postgres)
 const Job = require('../models-sequelize/Job');
@@ -104,10 +105,10 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create job (Sequelize)
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
     const { title, description, position, salary, location, requirements, responsibilities, employmentType, featured, featuredUntil, expiresAt } = req.body;
-    const userId = req.headers['user-id'];
+    const userId = req.user.id;
 
     // Basic validation
     if (!title || !description) return res.status(400).json({ message: 'Title and description are required' });
@@ -174,18 +175,16 @@ router.put('/:id', async (req, res) => {
 });
 
 // Set featured/unfeatured (admin or owner)
-router.put('/:id/feature', async (req, res) => {
+router.put('/:id/feature', auth, async (req, res) => {
   try {
-    const userId = req.headers['user-id'];
+    const userId = req.user.id;
     const { featured, featuredUntil } = req.body;
 
     const job = await Job.findByPk(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
 
     // Allow if admin or the job owner (pharmacy)
-    const user = await User.findByPk(userId);
-    if (!user) return res.status(401).json({ message: 'Authentication required' });
-    if (user.userType !== 'admin' && job.pharmacyId !== userId) {
+    if (req.user.userType !== 'admin' && job.pharmacyId !== userId) {
       return res.status(403).json({ message: 'Access denied' });
     }
 
@@ -200,15 +199,13 @@ router.put('/:id/feature', async (req, res) => {
 });
 
 // Close job manually (admin or owner)
-router.put('/:id/close', async (req, res) => {
+router.put('/:id/close', auth, async (req, res) => {
   try {
-    const userId = req.headers['user-id'];
+    const userId = req.user.id;
     const job = await Job.findByPk(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
 
-    const user = await User.findByPk(userId);
-    if (!user) return res.status(401).json({ message: 'Authentication required' });
-    if (user.userType !== 'admin' && job.pharmacyId !== userId) {
+    if (req.user.userType !== 'admin' && job.pharmacyId !== userId) {
       return res.status(403).json({ message: 'Access denied' });
     }
 
@@ -232,15 +229,10 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Apply for job (Sequelize JobApplication)
-router.post('/:id/apply', upload.single('resume'), async (req, res) => {
+router.post('/:id/apply', auth, upload.single('resume'), async (req, res) => {
   try {
-    const userId = req.headers['user-id'];
+    const userId = req.user.id;
     const coverLetter = req.body.coverLetter || '';
-    
-    // Validate userId
-    if (!userId) {
-      return res.status(401).json({ message: 'User authentication required' });
-    }
 
     // Check if resume is provided
     if (!req.file && !req.body.resume) {
@@ -251,12 +243,6 @@ router.post('/:id/apply', upload.single('resume'), async (req, res) => {
 
     if (!job) {
       return res.status(404).json({ message: 'Job not found' });
-    }
-
-    // Check if user exists
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
     }
 
     // Prevent duplicate applications (unique index on user_id + job_id in model)
@@ -304,12 +290,24 @@ router.post('/:id/apply', upload.single('resume'), async (req, res) => {
 });
 
 // Update application status (for pharmacy owners)
-router.put('/:jobId/applications/:applicationId/status', async (req, res) => {
+router.put('/:jobId/applications/:applicationId/status', auth, async (req, res) => {
   try {
     const { status, notes } = req.body;
 
     const application = await JobApplication.findByPk(req.params.applicationId);
     if (!application) return res.status(404).json({ message: 'Application not found' });
+
+    // Check if the application belongs to the specified job
+    if (application.jobId !== req.params.jobId) {
+      return res.status(400).json({ message: 'Application does not belong to this job' });
+    }
+
+    // Check if user owns the job or is admin
+    const job = await Job.findByPk(application.jobId);
+    if (!job) return res.status(404).json({ message: 'Job not found' });
+    if (req.user.userType !== 'admin' && job.pharmacyId !== req.user.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
 
     application.status = status;
     if (notes) application.notes = notes;
@@ -325,10 +323,15 @@ router.put('/:jobId/applications/:applicationId/status', async (req, res) => {
 });
 
 // Get applications for a job (for pharmacy owners)
-router.get('/:id/applications', async (req, res) => {
+router.get('/:id/applications', auth, async (req, res) => {
   try {
     const job = await Job.findByPk(req.params.id);
     if (!job) return res.status(404).json({ message: 'Job not found' });
+
+    // Check if user owns the job or is admin
+    if (req.user.userType !== 'admin' && job.pharmacyId !== req.user.id) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
 
     const apps = await JobApplication.findAll({ where: { jobId: job.id }, order: [['appliedAt', 'DESC']] });
     const appsWithUser = await Promise.all(apps.map(async (a) => {
@@ -341,5 +344,162 @@ router.get('/:id/applications', async (req, res) => {
     res.status(500).json({ message: 'Error fetching applications', error: error.message });
   }
 });
+
+// AI-Powered Job Recommendations
+router.get('/recommendations/:userId', auth, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Verify user can access their own recommendations
+    if (req.user.id !== userId && req.user.userType !== 'admin') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    // Get user's resume data
+    const Resume = require('../models/Resume');
+    const resume = await Resume.findOne({ userId });
+
+    if (!resume) {
+      return res.status(404).json({ message: 'Resume not found. Please create a resume first.' });
+    }
+
+    // Get user's profile data
+    const user = await User.findByPk(userId, {
+      attributes: ['id', 'firstName', 'lastName', 'location', 'certifications']
+    });
+
+    // Get all active jobs
+    const jobs = await Job.findAll({
+      where: { status: 'active' },
+      order: [['createdAt', 'DESC']]
+    });
+
+    // Calculate match scores
+    const recommendations = await Promise.all(jobs.map(async (job) => {
+      const matchScore = calculateJobMatchScore(job, resume, user);
+      return {
+        ...job.toJSON(),
+        matchScore,
+        matchReasons: getMatchReasons(job, resume, user)
+      };
+    }));
+
+    // Sort by match score and return top 10
+    recommendations.sort((a, b) => b.matchScore - a.matchScore);
+    const topRecommendations = recommendations.slice(0, 10);
+
+    res.json({
+      recommendations: topRecommendations,
+      totalJobs: jobs.length
+    });
+  } catch (error) {
+    console.error('Error getting job recommendations:', error);
+    res.status(500).json({ message: 'Error fetching recommendations', error: error.message });
+  }
+});
+
+// Helper function to calculate match score (0-100)
+function calculateJobMatchScore(job, resume, user) {
+  let score = 0;
+  let maxScore = 100;
+
+  // Position match (30 points)
+  if (job.position && resume.experience && resume.experience.length > 0) {
+    const hasRelevantExperience = resume.experience.some(exp =>
+      exp.jobTitle.toLowerCase().includes(job.position.toLowerCase()) ||
+      exp.description.toLowerCase().includes(job.position.toLowerCase())
+    );
+    if (hasRelevantExperience) score += 30;
+  }
+
+  // Skills match (25 points)
+  if (job.requirements && resume.skills) {
+    const jobRequirements = job.requirements.join(' ').toLowerCase();
+    const userSkills = resume.skills.flatMap(skill => skill.items).join(' ').toLowerCase();
+    const skillMatches = jobRequirements.split(' ').filter(req =>
+      userSkills.includes(req) || req.includes(userSkills.split(' ')[0])
+    ).length;
+    score += Math.min(skillMatches * 5, 25);
+  }
+
+  // Location match (15 points)
+  if (job.locationCity && (user.location || resume.personalInfo.location)) {
+    const userLocation = (user.location || resume.personalInfo.location || '').toLowerCase();
+    const jobLocation = job.locationCity.toLowerCase();
+    if (userLocation.includes(jobLocation) || jobLocation.includes(userLocation)) {
+      score += 15;
+    }
+  }
+
+  // Certifications match (15 points)
+  const allUserCerts = [...(user.certifications || []), ...(resume.certifications || []).map(c => c.name)];
+  if (job.requirements && allUserCerts.length > 0) {
+    const certMatches = job.requirements.filter(req =>
+      allUserCerts.some(cert => cert.toLowerCase().includes(req.toLowerCase()) || req.toLowerCase().includes(cert.toLowerCase()))
+    ).length;
+    score += Math.min(certMatches * 5, 15);
+  }
+
+  // Experience level match (15 points)
+  if (resume.experience && resume.experience.length > 0) {
+    const totalExperience = resume.experience.reduce((total, exp) => {
+      const endDate = exp.endDate || new Date();
+      const startDate = new Date(exp.startDate);
+      return total + (endDate - startDate) / (1000 * 60 * 60 * 24 * 365); // years
+    }, 0);
+
+    // Assume pharmacist roles need more experience
+    if (job.position === 'Pharmacist' && totalExperience >= 2) score += 15;
+    else if (job.position === 'Pharmacy Manager' && totalExperience >= 5) score += 15;
+    else if (totalExperience >= 1) score += 10;
+  }
+
+  return Math.min(score, maxScore);
+}
+
+// Helper function to provide match reasons
+function getMatchReasons(job, resume, user) {
+  const reasons = [];
+
+  // Position match
+  if (job.position && resume.experience) {
+    const hasRelevantExperience = resume.experience.some(exp =>
+      exp.jobTitle.toLowerCase().includes(job.position.toLowerCase())
+    );
+    if (hasRelevantExperience) reasons.push('Relevant work experience');
+  }
+
+  // Skills match
+  if (job.requirements && resume.skills) {
+    const jobRequirements = job.requirements.join(' ').toLowerCase();
+    const userSkills = resume.skills.flatMap(skill => skill.items).join(' ').toLowerCase();
+    const matchingSkills = job.requirements.filter(req =>
+      userSkills.includes(req.toLowerCase())
+    );
+    if (matchingSkills.length > 0) {
+      reasons.push(`Skills match: ${matchingSkills.slice(0, 3).join(', ')}`);
+    }
+  }
+
+  // Location match
+  if (job.locationCity && user.location) {
+    if (user.location.toLowerCase().includes(job.locationCity.toLowerCase())) {
+      reasons.push('Location preference match');
+    }
+  }
+
+  // Certifications match
+  const allUserCerts = [...(user.certifications || []), ...(resume.certifications || []).map(c => c.name)];
+  if (job.requirements && allUserCerts.length > 0) {
+    const matchingCerts = job.requirements.filter(req =>
+      allUserCerts.some(cert => cert.toLowerCase().includes(req.toLowerCase()))
+    );
+    if (matchingCerts.length > 0) {
+      reasons.push(`Certifications match: ${matchingCerts.slice(0, 2).join(', ')}`);
+    }
+  }
+
+  return reasons;
+}
 
 module.exports = router;

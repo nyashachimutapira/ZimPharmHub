@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import JobsPage from './pages/JobsPage';
+import JobAlertsPage from './pages/JobAlertsPage';
 import JobDetailPage from './pages/JobDetailPage';
 import ProductsPage from './pages/ProductsPage';
 import PharmaciesPage from './pages/PharmaciesPage';
@@ -16,6 +17,7 @@ import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import DashboardPage from './pages/DashboardPage';
 import PharmacyDashboardPage from './pages/PharmacyDashboardPage';
+import AnalyticsDashboardPage from './pages/AnalyticsDashboardPage';
 import PostJobPage from './pages/PostJobPage';
 import AdminPanelPage from './pages/AdminPanelPage';
 import MessagesPage from './pages/MessagesPage';
@@ -24,17 +26,21 @@ import ContactPage from './pages/ContactPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
+import { ThemeContext } from './context/ThemeContext';
 import './App.css';
 
 function App() {
+  const { isDarkMode } = useContext(ThemeContext);
+
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
+      <div className={`min-h-screen flex flex-col ${isDarkMode ? 'dark' : ''}`}>
         <Navbar />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/job-alerts" element={<JobAlertsPage />} />
             <Route path="/jobs/:id" element={<JobDetailPage />} />
             <Route path="/post-job" element={<PostJobPage />} />
             <Route path="/products" element={<ProductsPage />} />
@@ -49,6 +55,7 @@ function App() {
             <Route path="/profile/:id" element={<ProfilePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/pharmacy-dashboard" element={<PharmacyDashboardPage />} />
+            <Route path="/analytics" element={<AnalyticsDashboardPage />} />
             <Route path="/admin" element={<AdminPanelPage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/faq" element={<FAQPage />} />

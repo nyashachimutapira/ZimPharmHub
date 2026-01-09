@@ -31,3 +31,4 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO zimpharmuser;
 -- After this script, run: psql -U zimpharmuser -d zimpharmhub -f create_tables.sql
 
 
+

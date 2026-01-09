@@ -1,0 +1,274 @@
+/* Progress Indicator Styles */
+.progress-indicator {
+  position: relative;
+  width: 100%;
+}
+
+/* Horizontal Progress Indicator */
+.progress-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.progress-bar-background {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.progress-step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.progress-step.active .progress-step-circle {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  border-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.progress-step.current .progress-step-circle {
+  transform: scale(1.1);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.6);
+  }
+}
+
+.progress-check {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.progress-step-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progress-step.active .progress-step-label {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.progress-current-info {
+  text-align: center;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.progress-current-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.progress-current-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Vertical Progress Indicator */
+.progress-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.progress-step-vertical {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+}
+
+.progress-step-vertical .progress-step-circle {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.progress-step-content {
+  flex: 1;
+  padding-bottom: 24px;
+}
+
+.progress-step-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.progress-step-vertical.active .progress-step-label {
+  color: var(--primary-color);
+}
+
+.progress-step-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.progress-step-vertical.active .progress-step-description {
+  color: var(--text-primary);
+}
+
+.progress-connector-vertical {
+  position: absolute;
+  left: 19px;
+  top: 44px;
+  width: 2px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+.progress-connector-vertical.completed {
+  background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .progress-steps {
+    gap: 8px;
+  }
+
+  .progress-step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .progress-check {
+    font-size: 14px;
+  }
+
+  .progress-step-label {
+    font-size: 10px;
+    max-width: 60px;
+  }
+
+  .progress-current-info {
+    padding: 12px;
+  }
+
+  .progress-current-title {
+    font-size: 13px;
+  }
+
+  .progress-current-description {
+    font-size: 12px;
+  }
+
+  /* Vertical layout adjustments */
+  .progress-step-vertical {
+    gap: 12px;
+  }
+
+  .progress-step-content {
+    padding-bottom: 16px;
+  }
+
+  .progress-connector-vertical {
+    left: 15px;
+    top: 36px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .progress-bar-background {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .progress-step-circle {
+    background: #333;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .progress-current-info {
+    background: #333;
+    border-color: #555;
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .progress-step.current .progress-step-circle {
+    animation: none;
+  }
+
+  .progress-bar-fill,
+  .progress-connector-vertical {
+    transition: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .progress-bar-fill {
+    background: currentColor;
+  }
+
+  .progress-step.active .progress-step-circle {
+    border-width: 4px;
+  }
+
+  .progress-connector-vertical.completed {
+    background: currentColor;
+  }
+}

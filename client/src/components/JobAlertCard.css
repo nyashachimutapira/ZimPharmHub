@@ -1,0 +1,359 @@
+/* JobAlertCard.css */
+
+.job-alert-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.job-alert-card:hover {
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
+  transform: translateY(-1px);
+}
+
+.job-alert-card.inactive {
+  opacity: 0.7;
+  border-color: #dee2e6;
+}
+
+.job-alert-card.inactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+/* Header */
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.alert-title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.alert-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  flex: 1;
+}
+
+.alert-status {
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.alert-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon:hover {
+  background: #f8f9fa;
+}
+
+.btn-icon.delete:hover {
+  background: #fee;
+  color: #e74c3c;
+}
+
+/* Description */
+.alert-description {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+/* Details */
+.alert-details {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 13px;
+  min-width: 100px;
+}
+
+.detail-value {
+  color: #34495e;
+  font-size: 13px;
+  text-align: right;
+  flex: 1;
+}
+
+.detail-value.criteria {
+  font-style: italic;
+  color: #7f8c8d;
+}
+
+/* Footer */
+.alert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #e9ecef;
+}
+
+.alert-stats {
+  flex: 1;
+}
+
+.pending-matches {
+  background: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.alert-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Button styles */
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #5a6268;
+  border-color: #5a6268;
+}
+
+.btn-outline {
+  background: white;
+  color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #6c757d;
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .job-alert-card {
+    padding: 16px;
+  }
+
+  .alert-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .alert-title-section {
+    width: 100%;
+  }
+
+  .alert-actions {
+    align-self: flex-end;
+  }
+
+  .alert-details {
+    padding: 12px;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .detail-value {
+    text-align: left;
+  }
+
+  .alert-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .alert-buttons {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .job-alert-card {
+    padding: 12px;
+  }
+
+  .alert-name {
+    font-size: 16px;
+  }
+
+  .alert-details {
+    padding: 10px;
+  }
+
+  .btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .btn-sm {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .alert-actions {
+    gap: 4px;
+  }
+
+  .btn-icon {
+    padding: 4px;
+    font-size: 12px;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .job-alert-card {
+    border-color: #000;
+  }
+
+  .job-alert-card:hover {
+    border-color: #000;
+  }
+
+  .alert-name {
+    color: #000;
+  }
+
+  .detail-label {
+    color: #000;
+  }
+
+  .btn-secondary {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+  }
+
+  .btn-outline {
+    border-color: #000;
+    color: #000;
+  }
+
+  .btn-outline:hover {
+    background: #000;
+    color: #fff;
+  }
+}
+
+/* Focus styles */
+.btn:focus,
+.btn-icon:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+/* Loading states */
+.btn:disabled {
+  position: relative;
+}
+
+.btn:disabled::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

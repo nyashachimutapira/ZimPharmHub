@@ -16,13 +16,24 @@ function Footer() {
           </div>
 
           <div className="footer-section">
-            <h4>Quick Links</h4>
+            <h4>Job Seekers</h4>
             <ul>
               <li><Link to="/jobs">Find Jobs</Link></li>
+              <li><Link to="/job-alerts">Job Alerts</Link></li>
+              <li><Link to="/dashboard">My Dashboard</Link></li>
+              <li><Link to="/articles">Career Resources</Link></li>
+              <li><Link to="/faq">FAQ</Link></li>
+            </ul>
+          </div>
+
+          <div className="footer-section">
+            <h4>Tools & Services</h4>
+            <ul>
               <li><Link to="/products">Browse Products</Link></li>
               <li><Link to="/forum">Community Forum</Link></li>
-              <li><Link to="/articles">Resources</Link></li>
-              <li><Link to="/faq">FAQ</Link></li>
+              <li><Link to="/events">Events Calendar</Link></li>
+              <li><Link to="/messages">Messages</Link></li>
+              <li><Link to="/analytics">Analytics</Link></li>
             </ul>
           </div>
 
@@ -85,12 +96,71 @@ function Footer() {
           </div>
 
           <div className="footer-section">
-            <h4>Follow Us</h4>
+            <h4>Contact & Support</h4>
+            <div className="contact-info">
+              <p>
+                <strong>📧 Email:</strong><br />
+                <a href="mailto:support@zimpharmhub.com">support@zimpharmhub.com</a>
+              </p>
+              <p>
+                <strong>📞 Phone:</strong><br />
+                <a href="tel:+263123456789">+263 123 456 789</a>
+              </p>
+              <p>
+                <strong>📍 Address:</strong><br />
+                Harare, Zimbabwe
+              </p>
+            </div>
+            <div className="help-links">
+              <Link to="/faq">Help Center</Link>
+              <Link to="/contact">Contact Support</Link>
+            </div>
+          </div>
+
+          <div className="footer-section">
+            <h4>Stay Updated</h4>
+            <p>Subscribe to our newsletter for job alerts and pharmacy updates.</p>
+            <div className="newsletter-signup">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="newsletter-input"
+              />
+              <button className="newsletter-btn">Subscribe</button>
+            </div>
             <div className="social-icons">
-              <a href="#"><FaFacebook /></a>
-              <a href="#"><FaTwitter /></a>
-              <a href="#"><FaLinkedin /></a>
-              <a href="#"><FaInstagram /></a>
+              <a href="#" aria-label="Facebook"><FaFacebook /></a>
+              <a href="#" aria-label="Twitter"><FaTwitter /></a>
+              <a href="#" aria-label="LinkedIn"><FaLinkedin /></a>
+              <a href="#" aria-label="Instagram"><FaInstagram /></a>
+            </div>
+          </div>
+
+          <div className="footer-section">
+            <h4>Platform Stats</h4>
+            <div className="stats-grid">
+              <div className="stat-item">
+                <span className="stat-number">500+</span>
+                <span className="stat-label">Active Jobs</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number">1000+</span>
+                <span className="stat-label">Registered Users</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number">200+</span>
+                <span className="stat-label">Partner Pharmacies</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number">95%</span>
+                <span className="stat-label">User Satisfaction</span>
+              </div>
+            </div>
+            <div className="certifications">
+              <div className="cert-badge">
+                <span className="cert-icon">🏆</span>
+                <span>Zimbabwe Top Health Tech 2025</span>
+              </div>
             </div>
           </div>
         </div>

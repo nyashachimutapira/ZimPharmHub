@@ -1,0 +1,379 @@
+/* JobAlertForm.css */
+
+.job-alert-form {
+  padding: 24px;
+}
+
+.form-section {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.form-section:last-child {
+  border-bottom: none;
+  margin-bottom: 24px;
+}
+
+.form-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+}
+
+.section-description {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="time"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #2c3e50;
+  background: white;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Checkbox styling */
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: normal;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3498db;
+  cursor: pointer;
+}
+
+.checkbox-label span {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Multi-select grid */
+.multi-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.multi-select-grid .checkbox-label {
+  margin: 0;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.multi-select-grid .checkbox-label:hover {
+  border-color: #3498db;
+  background: #f8f9fa;
+}
+
+.multi-select-grid .checkbox-label input[type="checkbox"]:checked + span {
+  color: #3498db;
+  font-weight: 600;
+}
+
+/* Salary range inputs */
+.salary-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.salary-range-inputs input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #2c3e50;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.salary-range-inputs input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.salary-range-inputs span {
+  color: #7f8c8d;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Select dropdown */
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.form-group select option {
+  padding: 8px;
+}
+
+/* Form actions */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 24px;
+  border-top: 1px solid #e9ecef;
+}
+
+.form-actions button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.form-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #2980b9;
+  border-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-secondary {
+  background: white;
+  color: #7f8c8d;
+  border-color: #e9ecef;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+  color: #2c3e50;
+}
+
+/* Required field indicator */
+.form-group label:has(+ input[required]),
+.form-group label:has(+ textarea[required]) {
+  position: relative;
+}
+
+.form-group label:has(+ input[required])::after,
+.form-group label:has(+ textarea[required])::after {
+  content: '*';
+  color: #e74c3c;
+  margin-left: 4px;
+  font-weight: 700;
+}
+
+/* Validation styles */
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+  border-color: #e74c3c;
+}
+
+.form-group.error .checkbox-label span {
+  color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .job-alert-form {
+    padding: 16px;
+  }
+
+  .form-section {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+  }
+
+  .multi-select-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .multi-select-grid .checkbox-label {
+    padding: 10px 12px;
+  }
+
+  .salary-range-inputs {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .salary-range-inputs span {
+    align-self: center;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .form-actions button {
+    width: 100%;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .job-alert-form {
+    padding: 12px;
+  }
+
+  .form-section h3 {
+    font-size: 16px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px 12px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  .checkbox-label {
+    font-size: 14px;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border-color: #000;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #000;
+    box-shadow: 0 0 0 2px #000;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    border: 2px solid #000;
+  }
+
+  .multi-select-grid .checkbox-label {
+    border-color: #000;
+  }
+
+  .btn-primary {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+  }
+
+  .btn-secondary {
+    border-color: #000;
+    color: #000;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.form-group input:focus-visible,
+.form-group select:focus-visible,
+.form-group textarea:focus-visible {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.form-actions button:disabled {
+  position: relative;
+}
+
+.form-actions button:disabled::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

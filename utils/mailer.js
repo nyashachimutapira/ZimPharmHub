@@ -79,8 +79,6 @@ async function sendOwnerNotification({ ownerEmail, ownerName, jobTitle, featured
   return sendEmail(ownerEmail, `Your job has been featured — ${process.env.FRONTEND_NAME || 'ZimPharmHub'}`, text, html);
 }
 
-module.exports = { sendEmail, notifySubscribers, sendReceiptEmail, sendOwnerNotification };
-
 // Notify newsletter subscribers for a given category (e.g., 'jobs' or 'products')
 async function notifySubscribers(category, subject, plainText, htmlContent) {
   try {
@@ -113,4 +111,5 @@ async function notifySubscribers(category, subject, plainText, htmlContent) {
   }
 }
 
-module.exports = { sendEmail, notifySubscribers };
+module.exports = { sendEmail, notifySubscribers, sendReceiptEmail, sendOwnerNotification };
+

@@ -54,10 +54,23 @@
   margin-bottom: 1.5rem;
   letter-spacing: -0.02em;
   line-height: 1.1;
-  background: linear-gradient(to right, #ffffff, #E6F2FF);
+  background: linear-gradient(135deg, #ffffff 0%, #E6F2FF 50%, #ffffff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.hero-content h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+  border-radius: 2px;
 }
 
 .hero-content p {

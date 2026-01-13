@@ -1,7 +1,16 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const User = require('../models-sequelize/User');
-const { UniqueConstraintError } = require('sequelize');
+require('dotenv').config();
+
+// Use appropriate model based on database mode
+let User;
+if (process.env.USE_MONGODB === 'true') {
+  User = require('../models/User'); // MongoDB Mongoose model
+} else {
+  User = require('../models-sequelize/User'); // Sequelize model
+  var UniqueConstraintError = require('sequelize').UniqueConstraintError;
+}
+
 const router = express.Router();
 
 // Test database connection endpoint (for debugging)

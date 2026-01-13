@@ -52,7 +52,7 @@ const User = sequelize.define('User', {
     allowNull: true
   },
   certifications: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
+    type: DataTypes.JSON,
     defaultValue: []
   },
   resume: {

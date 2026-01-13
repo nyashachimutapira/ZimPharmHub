@@ -56,11 +56,11 @@ const Job = sequelize.define('Job', {
     field: 'location_address'
   },
   requirements: {
-    type: DataTypes.ARRAY(DataTypes.TEXT),
+    type: DataTypes.JSON,
     defaultValue: []
   },
   responsibilities: {
-    type: DataTypes.ARRAY(DataTypes.TEXT),
+    type: DataTypes.JSON,
     defaultValue: []
   },
   employmentType: {

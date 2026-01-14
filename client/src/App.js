@@ -21,6 +21,8 @@ import AnalyticsDashboardPage from './pages/AnalyticsDashboardPage';
 import PostJobPage from './pages/PostJobPage';
 import AdminPanelPage from './pages/AdminPanelPage';
 import MessagesPage from './pages/MessagesPage';
+import ChatPage from './pages/ChatPage';
+import ActivityFeedPage from './pages/ActivityFeedPage';
 import FAQPage from './pages/FAQPage';
 import ContactPage from './pages/ContactPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
@@ -58,6 +60,8 @@ function App() {
             <Route path="/analytics" element={<AnalyticsDashboardPage />} />
             <Route path="/admin" element={<AdminPanelPage />} />
             <Route path="/messages" element={<MessagesPage />} />
+            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/activity-feed" element={<ActivityFeedPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/terms" element={<TermsPage />} />

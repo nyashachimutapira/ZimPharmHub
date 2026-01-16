@@ -129,10 +129,10 @@ function Footer() {
               <button className="newsletter-btn">Subscribe</button>
             </div>
             <div className="social-icons">
-              <a href="https://facebook.com" aria-label="Facebook"><FaFacebook /></a>
-              <a href="https://twitter.com" aria-label="Twitter"><FaTwitter /></a>
-              <a href="https://linkedin.com" aria-label="LinkedIn"><FaLinkedin /></a>
-              <a href="https://instagram.com" aria-label="Instagram"><FaInstagram /></a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FaFacebook /></a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><FaTwitter /></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram /></a>
             </div>
           </div>
 

@@ -19,14 +19,19 @@ function PharmacyDashboardPage() {
         const jobsResp = await axios.get('/api/jobs');
         // Filter jobs by pharmacyId
         if (Array.isArray(jobsResp.data)) {
-          setJobs(jobsResp.data.filter(j => j.pharmacyId === user.id));
+          const filteredJobs = jobsResp.data.filter(j => j.pharmacyId === user.id);
+          setJobs(filteredJobs);
+        } else {
+          console.warn('Jobs response is not an array:', jobsResp.data);
+          setJobs([]);
         }
 
         // Products endpoint is disabled - skip for now
-        // const productsResp = await axios.get('/api/products');
         setProducts([]);
       } catch (err) {
         console.error('Failed to load dashboard data:', err.message);
+        setJobs([]);
+        setProducts([]);
       } finally {
         setLoading(false);
       }

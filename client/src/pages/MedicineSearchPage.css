@@ -1,0 +1,740 @@
+.medicine-search-page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+/* Hero Section */
+.medicine-hero {
+  background: linear-gradient(135deg, #0f1d3d 0%, #1a2d5a 50%, #0d3b7a 100%);
+  color: white;
+  padding: 4rem 1.25rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.medicine-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 168, 255, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(15, 29, 61, 0.85) 0%, rgba(26, 45, 90, 0.85) 50%, rgba(13, 59, 122, 0.85) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+.medicine-hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.medicine-hero .highlight {
+  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.medicine-hero p {
+  font-size: 1.25rem;
+  opacity: 0.95;
+}
+
+/* Container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* Search Section */
+.search-section {
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+}
+
+.search-bar-container {
+  margin-bottom: 2rem;
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  color: #999;
+  pointer-events: none;
+  font-size: 1.1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 16px 14px 50px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+/* Filters */
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #1a1a2e;
+  font-size: 0.95rem;
+}
+
+.filter-select {
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+/* Medicines Section */
+.medicines-section {
+  padding: 2rem 0;
+  margin-bottom: 3rem;
+}
+
+.results-count {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.results-count strong {
+  color: #0066cc;
+  font-weight: 700;
+}
+
+/* Medicines Grid */
+.medicines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.medicine-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.medicine-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #0066cc;
+}
+
+.medicine-image {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.medicine-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.medicine-card:hover .medicine-image img {
+  transform: scale(1.1);
+}
+
+.image-placeholder {
+  font-size: 3rem;
+}
+
+.medicine-info {
+  padding: 1.5rem;
+}
+
+.medicine-info h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+  word-break: break-word;
+}
+
+.category-tag {
+  font-size: 0.8rem;
+  color: #0066cc;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.description {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.medicine-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #0066cc;
+  font-size: 1.1rem;
+}
+
+.price .icon {
+  font-size: 0.9rem;
+}
+
+.view-btn {
+  padding: 6px 12px;
+  background: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-btn:hover {
+  background: #0052a3;
+  transform: translateY(-2px);
+}
+
+/* Loading & No Results */
+.loading,
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading p,
+.no-results p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.no-results .icon {
+  font-size: 4rem;
+  color: #e0e0e0;
+  margin-bottom: 1rem;
+}
+
+.no-results h3 {
+  color: #1a1a2e;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #0066cc;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Medicine Detail View */
+.medicine-detail {
+  padding: 2rem 0;
+}
+
+.back-btn {
+  padding: 10px 16px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #0066cc;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.back-btn:hover {
+  background: #f5f5f5;
+  border-color: #0066cc;
+}
+
+.detail-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+/* Medicine Detail Main */
+.medicine-detail-main {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.medicine-image-large {
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.medicine-image-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder-large {
+  font-size: 5rem;
+}
+
+.medicine-details h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+}
+
+.category-large {
+  font-size: 0.95rem;
+  color: #0066cc;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.full-description {
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+.medicine-meta {
+  margin: 2rem 0;
+  padding: 2rem 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.meta-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.meta-item strong {
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+.meta-item span {
+  color: #666;
+}
+
+.in-stock {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.out-stock {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.price-section {
+  margin-top: 2rem;
+}
+
+.price-label {
+  color: #999;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.price-large {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0066cc;
+}
+
+/* Pharmacies Section */
+.pharmacies-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.pharmacies-section h3,
+.alternatives-section h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 1.5rem;
+}
+
+.no-pharmacies {
+  text-align: center;
+  color: #999;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.pharmacy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pharmacy-item {
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.pharmacy-item:hover {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.pharmacy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.pharmacy-header h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.verified-icon {
+  color: #4caf50;
+  font-size: 1.2rem;
+}
+
+.pharmacy-details-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.75rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.pharmacy-details-item .icon {
+  color: #0066cc;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.pharmacy-details-item a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.pharmacy-details-item a:hover {
+  text-decoration: underline;
+}
+
+.pharmacy-link-btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 8px 16px;
+  background: #0066cc;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.pharmacy-link-btn:hover {
+  background: #0052a3;
+  transform: translateY(-2px);
+}
+
+/* Alternatives Section */
+.alternatives-section {
+  grid-column: 1 / -1;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.alternatives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.alternative-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.alternative-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #0066cc;
+}
+
+.alt-image {
+  width: 100%;
+  height: 150px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.alt-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.alternative-card h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+}
+
+.alt-price {
+  color: #0066cc;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .detail-container {
+    grid-template-columns: 1fr;
+  }
+
+  .medicine-detail-main {
+    grid-template-columns: 200px 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .medicine-hero h1 {
+    font-size: 2rem;
+  }
+
+  .medicines-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .detail-container {
+    grid-template-columns: 1fr;
+  }
+
+  .medicine-detail-main {
+    grid-template-columns: 1fr;
+  }
+
+  .medicine-image-large {
+    height: 250px;
+  }
+
+  .medicine-details h2 {
+    font-size: 1.5rem;
+  }
+
+  .alternatives-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input,
+  .filter-select {
+    font-size: 16px;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .medicines-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .price-large {
+    font-size: 1.5rem;
+  }
+
+  .alternatives-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .medicine-search-page {
+    background: #1a1a2e;
+  }
+
+  .medicine-card,
+  .medicine-detail-main,
+  .pharmacies-section,
+  .alternatives-section {
+    background: #16213e;
+    border-color: #2a2a3e;
+  }
+
+  .medicine-info h3,
+  .medicine-details h2,
+  .pharmacies-section h3,
+  .alternatives-section h3,
+  .pharmacy-header h4,
+  .alternative-card h4 {
+    color: white;
+  }
+
+  .description,
+  .pharmacy-details-item,
+  .meta-item span,
+  .full-description {
+    color: #b0b0b0;
+  }
+
+  .search-input,
+  .filter-select {
+    background: #0f1d3d;
+    border-color: #2a2a3e;
+    color: white;
+  }
+
+  .search-input::placeholder {
+    color: #666;
+  }
+
+  .pharmacy-item {
+    background: #0f1d3d;
+    border-color: #2a2a3e;
+  }
+
+  .pharmacy-item:hover {
+    background: #16213e;
+  }
+
+  .alternative-card {
+    background: #0f1d3d;
+    border-color: #2a2a3e;
+  }
+
+  .back-btn {
+    background: #16213e;
+    border-color: #2a2a3e;
+  }
+}

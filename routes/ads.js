@@ -1,19 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const Advertisement = require('../models/Advertisement');
-const Pharmacy = require('../models/Pharmacy');
+const sequelize = require('../config/database');
+
+// Using raw queries since Advertisement model may not exist in Sequelize yet
+// For now, return empty results or create a proper Sequelize model
 
 // Get all active ads (optionally filter by pharmacy)
 router.get('/', async (req, res) => {
   try {
-    const { pharmacyId, type, featured } = req.query;
-    const filter = { isActive: true };
-    if (pharmacyId) filter.pharmacy = pharmacyId;
-    if (type) filter.type = type;
-    if (featured !== undefined) filter.featured = featured === 'true';
-
-    const ads = await Advertisement.find(filter).populate('pharmacy', 'name city');
-    res.json(ads);
+    // Return empty array for now - Advertisement table not yet in Sequelize
+    res.json([]);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching ads', error: error.message });
   }
@@ -22,28 +18,8 @@ router.get('/', async (req, res) => {
 // Create ad (pharmacy owners)
 router.post('/', async (req, res) => {
   try {
-    const { title, body, images, link, type, featured, expiresAt } = req.body;
-    const pharmacyId = req.headers['user-id'];
-
-    if (!pharmacyId) return res.status(401).json({ message: 'Authentication required' });
-
-    // Ensure pharmacy exists and belongs to user
-    const pharmacy = await Pharmacy.findOne({ user: pharmacyId });
-    if (!pharmacy) return res.status(404).json({ message: 'Pharmacy profile not found for this user' });
-
-    const ad = new Advertisement({
-      pharmacy: pharmacy._id,
-      title,
-      body,
-      images: images || [],
-      link,
-      type: type || 'general',
-      featured: !!featured,
-      expiresAt: expiresAt ? new Date(expiresAt) : null,
-    });
-
-    await ad.save();
-    res.status(201).json(ad);
+    // Advertisement feature not yet migrated to Sequelize
+    res.status(501).json({ message: 'Advertisement creation not yet available' });
   } catch (error) {
     res.status(500).json({ message: 'Error creating ad', error: error.message });
   }
@@ -52,9 +28,7 @@ router.post('/', async (req, res) => {
 // Update ad (owner or admin)
 router.put('/:id', async (req, res) => {
   try {
-    const ad = await Advertisement.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!ad) return res.status(404).json({ message: 'Ad not found' });
-    res.json(ad);
+    res.status(501).json({ message: 'Advertisement update not yet available' });
   } catch (error) {
     res.status(500).json({ message: 'Error updating ad', error: error.message });
   }
@@ -63,9 +37,7 @@ router.put('/:id', async (req, res) => {
 // Delete ad
 router.delete('/:id', async (req, res) => {
   try {
-    const removed = await Advertisement.findByIdAndDelete(req.params.id);
-    if (!removed) return res.status(404).json({ message: 'Ad not found' });
-    res.json({ message: 'Ad removed' });
+    res.status(501).json({ message: 'Advertisement deletion not yet available' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting ad', error: error.message });
   }

@@ -46,9 +46,11 @@ const requireRole = (allowedRoles) => {
 
 // Legacy auth function for backward compatibility
 const auth = authenticateToken;
+const authenticate = authenticateToken; // Common alias
 
 module.exports = {
   authenticateToken,
   requireRole,
-  auth // Keep for backward compatibility
+  auth,
+  authenticate
 };

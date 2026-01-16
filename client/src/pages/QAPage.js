@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { MessageCircle, ThumbsUp, CheckCircle } from 'react-icons/fa';
+import { FaComments, FaThumbsUp, FaCheckCircle } from 'react-icons/fa';
 
 const QAPage = () => {
   const [questions, setQuestions] = useState([]);
@@ -223,7 +223,7 @@ const QAPage = () => {
               <div key={q.id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-xl font-bold text-gray-900">{q.title}</h3>
-                  {q.isResolved && <CheckCircle className="text-green-600" />}
+                  {q.isResolved && <FaCheckCircle className="text-green-600" />}
                 </div>
 
                 <p className="text-gray-600 text-sm mb-2">{q.description.substring(0, 200)}...</p>
@@ -243,11 +243,11 @@ const QAPage = () => {
                       onClick={() => upvoteQuestion(q.id)}
                       className="flex items-center gap-1 hover:text-blue-600"
                     >
-                      <ThumbsUp size={16} />
+                      <FaThumbsUp size={16} />
                       {q.upvotes} Upvotes
                     </button>
                     <div className="flex items-center gap-1">
-                      <MessageCircle size={16} />
+                      <FaComments size={16} />
                       {q.answersCount} Answers
                     </div>
                     <div>{q.views} Views</div>

@@ -35,6 +35,10 @@ app.use(cors());
 
 // Export app for tests
 module.exports = app;
+
+// Serve static files (images, etc.)
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
+
 // Serve uploaded files (resumes, images, etc.)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -123,24 +127,34 @@ app.use('/api/operations', require('./routes/operations'));
 // User Engagement Features
 // These routes require models-sequelize versions of the models
 
+// Phase 2: User Engagement Features (Medicine Reminders, Pharmacist Profiles, Loyalty, Insurance)
+// Disabled: Not yet fully migrated to Sequelize
+// app.use('/api/medicine-reminders', require('./routes/medicine-reminders'));
+// app.use('/api/pharmacist-profiles', require('./routes/pharmacist-profiles'));
+// app.use('/api/loyalty', require('./routes/loyalty'));
+// app.use('/api/insurance', require('./routes/insurance'));
+
 // Pharmacy Reviews & Ratings
 app.use('/api/reviews', require('./routes/reviews'));
 
 // Real-time Features (Phase 1)
-app.use('/api/realtime', require('./routes/realtime'));
+// Disabled: Not yet fully migrated to Sequelize
+// app.use('/api/realtime', require('./routes/realtime'));
 
 // New Professional Services Features
-app.use('/api/certifications', require('./routes/certifications'));
-app.use('/api/pharmacies', require('./routes/pharmacies'));
-app.use('/api/cpd-courses', require('./routes/cpd-courses'));
-app.use('/api/mentorship', require('./routes/mentorship'));
-app.use('/api/events', require('./routes/events'));
-app.use('/api/job-applications', require('./routes/job-applications'));
+// Disabled: Not yet fully migrated to Sequelize
+// app.use('/api/certifications', require('./routes/certifications'));
+// app.use('/api/pharmacies', require('./routes/pharmacies'));
+// app.use('/api/cpd-courses', require('./routes/cpd-courses'));
+// app.use('/api/mentorship', require('./routes/mentorship'));
+// app.use('/api/events', require('./routes/events'));
+// app.use('/api/job-applications', require('./routes/job-applications'));
 
 // Community & Safety Features
-app.use('/api/qa', require('./routes/qa'));
-app.use('/api/incidents', require('./routes/incidents'));
-app.use('/api/regulatory', require('./routes/regulatory'));
+// Disabled: Not yet fully migrated to Sequelize
+// app.use('/api/qa', require('./routes/qa'));
+// app.use('/api/incidents', require('./routes/incidents'));
+// app.use('/api/regulatory', require('./routes/regulatory'));
 app.use('/api/resources', require('./routes/resources'));
 
 // Analytics & Insights

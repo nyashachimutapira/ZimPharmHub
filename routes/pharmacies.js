@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../middleware/auth');
-const Pharmacy = require('../models/Pharmacy');
+const { authenticateToken } = require('../middleware/auth');
 const { Op } = require('sequelize');
+const sequelize = require('../config/database');
+
+// Pharmacy model not yet fully migrated to Sequelize
+const Pharmacy = require('../models-sequelize/Pharmacy');
 
 // Get all pharmacies with search and filters
 router.get('/', async (req, res) => {
@@ -52,7 +55,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new pharmacy (authenticated users)
-router.post('/', authenticate, async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
     const {
       pharmacyName,
@@ -98,7 +101,7 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // Update pharmacy
-router.put('/:id', authenticate, async (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
   try {
     const pharmacy = await Pharmacy.findByPk(req.params.id);
     if (!pharmacy) {

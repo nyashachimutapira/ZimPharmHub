@@ -28,6 +28,12 @@ import ContactPage from './pages/ContactPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import TermsPage from './pages/TermsPage';
 import PrivacyPage from './pages/PrivacyPage';
+import CPDCoursesPage from './pages/CPDCoursesPage';
+import MentorshipPage from './pages/MentorshipPage';
+import ResumeBuilderPage from './pages/ResumeBuilderPage';
+import QAPage from './pages/QAPage';
+import ResourcesPage from './pages/ResourcesPage';
+import AdminResourcesPage from './pages/AdminResourcesPage';
 import { ThemeContext } from './context/ThemeContext';
 import './App.css';
 
@@ -51,6 +57,12 @@ function App() {
             <Route path="/forum/:id" element={<ForumPostDetailPage />} />
             <Route path="/articles" element={<ArticlesPage />} />
             <Route path="/events" element={<EventsPage />} />
+            <Route path="/cpd-courses" element={<CPDCoursesPage />} />
+            <Route path="/mentorship" element={<MentorshipPage />} />
+            <Route path="/resume-builder" element={<ResumeBuilderPage />} />
+            <Route path="/qa" element={<QAPage />} />
+            <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/admin/resources" element={<AdminResourcesPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />

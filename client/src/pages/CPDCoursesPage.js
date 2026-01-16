@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Clock, Users, DollarSign, Award } from 'react-icons/fa';
+import { FaClock, FaUsers, FaDollarSign, FaAward } from 'react-icons/fa';
 
 const CPDCoursesPage = () => {
   const [courses, setCourses] = useState([]);
@@ -123,19 +123,19 @@ const CPDCoursesPage = () => {
 
                   <div className="space-y-2 mb-4 text-sm text-gray-700">
                     <div className="flex items-center">
-                      <Award className="mr-2 text-blue-600" />
+                      <FaAward className="mr-2 text-blue-600" />
                       <span>{course.cpdPoints} CPD Points</span>
                     </div>
                     <div className="flex items-center">
-                      <Clock className="mr-2 text-blue-600" />
+                      <FaClock className="mr-2 text-blue-600" />
                       <span>{course.duration} hours</span>
                     </div>
                     <div className="flex items-center">
-                      <Users className="mr-2 text-blue-600" />
+                      <FaUsers className="mr-2 text-blue-600" />
                       <span>{course.enrolledCount} enrolled</span>
                     </div>
                     <div className="flex items-center">
-                      <DollarSign className="mr-2 text-blue-600" />
+                      <FaDollarSign className="mr-2 text-blue-600" />
                       <span>{course.price} {course.currency}</span>
                     </div>
                   </div>

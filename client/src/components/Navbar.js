@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaBriefcase, FaBox, FaStoreAlt, FaComments, FaBook, FaCalendarAlt, FaQuestionCircle, FaEnvelope } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaBriefcase, FaBox, FaStoreAlt, FaComments, FaBook, FaCalendarAlt, FaQuestionCircle, FaEnvelope, FaChevronDown } from 'react-icons/fa';
 import Notifications from './Notifications';
 import NotificationCenter from './NotificationCenter';
 import './Navbar.css';
@@ -9,6 +9,7 @@ import { ThemeContext } from '../context/ThemeContext';
 
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
@@ -27,14 +28,20 @@ function Navbar() {
     setMobileMenuOpen(false);
   };
 
+  const closeMoreMenu = () => {
+    setMoreMenuOpen(false);
+  };
+
+  const toggleMoreMenu = () => {
+    setMoreMenuOpen(!moreMenuOpen);
+  };
+
   return (
     <nav className="navbar">
       <div className="container navbar-container">
         {/* Logo */}
         <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
-          <svg className="logo-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
-          </svg>
+          <img src="/images/flags/logo.jpg" alt="ZimPharmHub" className="logo-icon" />
           <span className="logo-text">ZimPharmHub</span>
         </Link>
 
@@ -57,40 +64,33 @@ function Navbar() {
               <FaStoreAlt className="nav-icon" />
               Pharmacies
             </Link>
-            <Link to="/forum" className="nav-link" onClick={closeMobileMenu}>
-              <FaComments className="nav-icon" />
-              Forum
-            </Link>
-            <Link to="/articles" className="nav-link" onClick={closeMobileMenu}>
+            <Link to="/resources" className="nav-link" onClick={closeMobileMenu}>
               <FaBook className="nav-icon" />
-              Resources
+              📚 Resources
             </Link>
-            <Link to="/events" className="nav-link" onClick={closeMobileMenu}>
-              <FaCalendarAlt className="nav-icon" />
-              Events
+            <Link to="/cpd-courses" className="nav-link" onClick={closeMobileMenu}>
+              <FaBook className="nav-icon" />
+              CPD Courses
             </Link>
-            <Link to="/faq" className="nav-link" onClick={closeMobileMenu}>
-              <FaQuestionCircle className="nav-icon" />
-              FAQ
-            </Link>
-            <Link to="/contact" className="nav-link" onClick={closeMobileMenu}>
-              <FaEnvelope className="nav-icon" />
-              Contact
-            </Link>
+
+            {/* Sidebar Menu Button */}
+            <button 
+              className="nav-sidebar-btn" 
+              onClick={toggleMoreMenu}
+              title="Open menu"
+              aria-label="Toggle sidebar menu"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18M9 3v18"/>
+              </svg>
+            </button>
           </div>
 
           <div className="nav-menu-divider"></div>
 
           {/* User & Theme */}
           <div className="nav-menu-section">
-            <button 
-              onClick={toggleDarkMode} 
-              className="btn-theme-toggle" 
-              title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? <FaSun /> : <FaMoon />}
-            </button>
 
             {isAuthenticated ? (
               <>
@@ -109,9 +109,14 @@ function Navbar() {
                   </>
                 )}
                 {user?.userType === 'admin' && (
-                  <Link to="/admin" className="nav-link btn-nav-secondary" onClick={closeMobileMenu}>
-                    Admin Panel
-                  </Link>
+                  <>
+                    <Link to="/admin" className="nav-link btn-nav-secondary" onClick={closeMobileMenu}>
+                      Admin Panel
+                    </Link>
+                    <Link to="/admin/resources" className="nav-link" onClick={closeMobileMenu}>
+                      ⚙️ Manage Resources
+                    </Link>
+                  </>
                 )}
                 <Link to="/messages" className="nav-link" onClick={closeMobileMenu}>
                   <FaEnvelope className="nav-icon" />
@@ -125,16 +130,7 @@ function Navbar() {
                   <FaSignOutAlt /> Logout
                 </button>
               </>
-            ) : (
-              <>
-                <Link to="/login" className="nav-link btn-nav" onClick={closeMobileMenu}>
-                  Login
-                </Link>
-                <Link to="/register" className="nav-link btn-nav btn-nav-primary" onClick={closeMobileMenu}>
-                  Sign Up
-                </Link>
-              </>
-            )}
+            ) : null}
           </div>
         </div>
 
@@ -148,6 +144,78 @@ function Navbar() {
           {mobileMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
+
+      {/* Sidebar Menu Panel */}
+      {moreMenuOpen && (
+        <>
+          <div className="sidebar-overlay" onClick={closeMoreMenu}></div>
+          <div className="sidebar-panel">
+            <div className="sidebar-header">
+              <h3>Menu</h3>
+              <button className="sidebar-close" onClick={closeMoreMenu}>
+                <FaTimes />
+              </button>
+            </div>
+
+            <nav className="sidebar-nav">
+              <Link to="/mentorship" className="sidebar-item" onClick={closeMoreMenu}>
+                <FaUser className="sidebar-icon" />
+                <span>Mentorship</span>
+              </Link>
+              <Link to="/forum" className="sidebar-item" onClick={closeMoreMenu}>
+                <FaComments className="sidebar-icon" />
+                <span>Forum</span>
+              </Link>
+              <Link to="/events" className="sidebar-item" onClick={closeMoreMenu}>
+                <FaCalendarAlt className="sidebar-icon" />
+                <span>Events</span>
+              </Link>
+              <Link to="/resume-builder" className="sidebar-item" onClick={closeMoreMenu}>
+                <FaBook className="sidebar-icon" />
+                <span>Resume Builder</span>
+              </Link>
+              <Link to="/qa" className="sidebar-item" onClick={closeMoreMenu}>
+                <FaQuestionCircle className="sidebar-icon" />
+                <span>Q&A</span>
+              </Link>
+              <Link to="/faq" className="sidebar-item" onClick={closeMoreMenu}>
+                <FaQuestionCircle className="sidebar-icon" />
+                <span>FAQ</span>
+              </Link>
+              <Link to="/contact" className="sidebar-item" onClick={closeMoreMenu}>
+                <FaEnvelope className="sidebar-icon" />
+                <span>Contact</span>
+              </Link>
+            </nav>
+
+            {/* Auth Section in Sidebar */}
+            <div className="sidebar-footer">
+              <button 
+                onClick={toggleDarkMode} 
+                className="sidebar-theme-toggle" 
+                title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                aria-label="Toggle dark mode"
+              >
+                {isDarkMode ? <FaSun /> : <FaMoon />}
+                <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+              </button>
+
+              {!isAuthenticated ? (
+                <div className="sidebar-auth">
+                  <Link to="/login" className="sidebar-auth-link login" onClick={closeMoreMenu}>
+                    <FaUser className="sidebar-icon" />
+                    <span>Login</span>
+                  </Link>
+                  <Link to="/register" className="sidebar-auth-link signup" onClick={closeMoreMenu}>
+                    <FaUser className="sidebar-icon" />
+                    <span>Sign Up</span>
+                  </Link>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </>
+      )}
     </nav>
   );
 }

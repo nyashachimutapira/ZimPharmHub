@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Star, Users, Clock, DollarSign } from 'react-icons/fa';
+import { FaStar, FaUsers, FaClock, FaDollarSign } from 'react-icons/fa';
 
 const MentorshipPage = () => {
   const [mentorships, setMentorships] = useState([]);
@@ -112,7 +112,7 @@ const MentorshipPage = () => {
                 
                 {m.rating && (
                   <div className="flex items-center mb-2">
-                    <Star className="text-yellow-400 mr-1" />
+                    <FaStar className="text-yellow-400 mr-1" />
                     <span className="text-gray-700">{m.rating.toFixed(1)}</span>
                   </div>
                 )}
@@ -122,13 +122,13 @@ const MentorshipPage = () => {
                 <div className="space-y-2 mb-4 text-sm text-gray-700">
                   {m.duration && (
                     <div className="flex items-center">
-                      <Clock className="mr-2 text-blue-600" />
+                      <FaClock className="mr-2 text-blue-600" />
                       <span>{m.duration}</span>
                     </div>
                   )}
                   {m.price && (
                     <div className="flex items-center">
-                      <DollarSign className="mr-2 text-blue-600" />
+                      <FaDollarSign className="mr-2 text-blue-600" />
                       <span>{m.price} {m.currency}</span>
                     </div>
                   )}

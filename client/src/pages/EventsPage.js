@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Calendar, MapPin, Users, DollarSign } from 'react-icons/fa';
+import { FaCalendar, FaMapPin, FaUsers, FaDollarSign } from 'react-icons/fa';
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -130,21 +130,21 @@ const EventsPage = () => {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
                       <div className="flex items-center">
-                        <Calendar className="mr-2 text-blue-600" />
+                        <FaCalendar className="mr-2 text-blue-600" />
                         <div>
                           <p className="text-xs text-gray-600">Dates</p>
                           <p className="text-gray-900">{formatDate(event.startDate)}</p>
                         </div>
                       </div>
                       <div className="flex items-center">
-                        <MapPin className="mr-2 text-blue-600" />
+                        <FaMapPin className="mr-2 text-blue-600" />
                         <div>
                           <p className="text-xs text-gray-600">Location</p>
                           <p className="text-gray-900">{event.city}</p>
                         </div>
                       </div>
                       <div className="flex items-center">
-                        <Users className="mr-2 text-blue-600" />
+                        <FaUsers className="mr-2 text-blue-600" />
                         <div>
                           <p className="text-xs text-gray-600">Attendees</p>
                           <p className="text-gray-900">{event.attendeesCount}</p>
@@ -152,7 +152,7 @@ const EventsPage = () => {
                       </div>
                       {event.price > 0 && (
                         <div className="flex items-center">
-                          <DollarSign className="mr-2 text-blue-600" />
+                          <FaDollarSign className="mr-2 text-blue-600" />
                           <div>
                             <p className="text-xs text-gray-600">Price</p>
                             <p className="text-gray-900">{event.price} {event.currency}</p>

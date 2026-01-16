@@ -79,8 +79,10 @@
 }
 
 .language-flag {
-  font-size: 28px;
-  line-height: 1;
+  width: 40px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 .language-name {
@@ -142,7 +144,8 @@
   }
 
   .language-flag {
-    font-size: 24px;
+    width: 35px;
+    height: 24px;
   }
 
   .language-name {

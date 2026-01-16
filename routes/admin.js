@@ -9,6 +9,7 @@ const router = express.Router();
 const Payment = require('../models-sequelize/Payment');
 const SequelizeUser = require('../models-sequelize/User');
 const SequelizeJob = require('../models-sequelize/Job');
+// Resource not yet migrated to Sequelize
 
 // Middleware to check if user is admin
 const isAdmin = async (req, res, next) => {
@@ -231,6 +232,101 @@ router.put('/payments/:id/audit', isAdmin, async (req, res) => {
     res.json(payment);
   } catch (error) {
     res.status(500).json({ message: 'Error updating audit fields', error: error.message });
+  }
+});
+
+// ===========================
+// RESOURCE MANAGEMENT (Admin)
+// ===========================
+
+// Get all resources
+router.get('/resources', isAdmin, async (req, res) => {
+  try {
+    const resources = await Resource.findAll({
+      order: [['createdAt', 'DESC']],
+      include: [{ model: SequelizeUser, as: 'Uploader', attributes: ['id', 'firstName', 'lastName', 'email'] }]
+    });
+    res.json(resources);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching resources', error: error.message });
+  }
+});
+
+// Create resource
+router.post('/resources', isAdmin, async (req, res) => {
+  try {
+    const { title, description, category, resourceType, fileUrl, fileName, fileSize, tags, isPublic } = req.body;
+    const userId = req.headers['user-id'];
+
+    const resource = await Resource.create({
+      title,
+      description,
+      category,
+      resourceType: resourceType || 'guide',
+      fileUrl,
+      fileName,
+      fileSize,
+      tags: tags || [],
+      isPublic: isPublic !== undefined ? isPublic : true,
+      uploaderId: userId
+    });
+
+    res.status(201).json(resource);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating resource', error: error.message });
+  }
+});
+
+// Update resource
+router.put('/resources/:id', isAdmin, async (req, res) => {
+  try {
+    const resource = await Resource.findByPk(req.params.id);
+    if (!resource) return res.status(404).json({ message: 'Resource not found' });
+
+    const { title, description, category, resourceType, tags, isPublic } = req.body;
+    if (title) resource.title = title;
+    if (description) resource.description = description;
+    if (category) resource.category = category;
+    if (resourceType) resource.resourceType = resourceType;
+    if (tags) resource.tags = tags;
+    if (isPublic !== undefined) resource.isPublic = isPublic;
+
+    await resource.save();
+    res.json(resource);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating resource', error: error.message });
+  }
+});
+
+// Delete resource
+router.delete('/resources/:id', isAdmin, async (req, res) => {
+  try {
+    const resource = await Resource.findByPk(req.params.id);
+    if (!resource) return res.status(404).json({ message: 'Resource not found' });
+
+    await resource.destroy();
+    res.json({ message: 'Resource deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting resource', error: error.message });
+  }
+});
+
+// Get resource statistics
+router.get('/resources/stats/overview', isAdmin, async (req, res) => {
+  try {
+    const total = await Resource.count();
+    const public_resources = await Resource.count({ where: { isPublic: true } });
+    const totalDownloads = await Resource.sum('downloads');
+    const totalViews = await Resource.sum('views');
+
+    res.json({
+      total,
+      public: public_resources,
+      totalDownloads: totalDownloads || 0,
+      totalViews: totalViews || 0
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching resource stats', error: error.message });
   }
 });
 

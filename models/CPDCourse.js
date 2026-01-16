@@ -2,13 +2,13 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./User');
 
-const Event = sequelize.define('Event', {
+const CPDCourse = sequelize.define('CPDCourse', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  organizerId: {
+  instructorId: {
     type: DataTypes.UUID,
     allowNull: false,
     references: {
@@ -28,6 +28,12 @@ const Event = sequelize.define('Event', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  syllabus: {
+    type: DataTypes.TEXT,
+  },
+  courseContent: {
+    type: DataTypes.JSON,
+  },
   startDate: {
     type: DataTypes.DATE,
     allowNull: false,
@@ -36,26 +42,14 @@ const Event = sequelize.define('Event', {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  location: {
-    type: DataTypes.STRING,
+  duration: {
+    type: DataTypes.INTEGER, // in hours
     allowNull: false,
   },
-  city: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  province: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  eventType: {
-    type: DataTypes.ENUM('conference', 'workshop', 'seminar', 'training', 'networking', 'other'),
-    defaultValue: 'workshop',
-  },
-  capacity: {
+  maxParticipants: {
     type: DataTypes.INTEGER,
   },
-  attendeesCount: {
+  enrolledCount: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
@@ -67,21 +61,28 @@ const Event = sequelize.define('Event', {
     type: DataTypes.STRING,
     defaultValue: 'ZWL',
   },
-  agenda: {
-    type: DataTypes.JSON,
+  cpdPoints: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
   },
-  speakers: {
-    type: DataTypes.JSON,
-  },
-  imageUrl: {
-    type: DataTypes.STRING,
-  },
-  registrationLink: {
-    type: DataTypes.STRING,
+  level: {
+    type: DataTypes.ENUM('beginner', 'intermediate', 'advanced'),
+    defaultValue: 'intermediate',
   },
   status: {
     type: DataTypes.ENUM('upcoming', 'ongoing', 'completed', 'cancelled'),
     defaultValue: 'upcoming',
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+  },
+  rating: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
+  },
+  totalReviews: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -93,4 +94,4 @@ const Event = sequelize.define('Event', {
   },
 });
 
-module.exports = Event;
+module.exports = CPDCourse;

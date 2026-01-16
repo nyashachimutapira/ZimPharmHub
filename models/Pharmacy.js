@@ -1,75 +1,98 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
+const User = require('./User');
 
-const PharmacySchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const Pharmacy = sequelize.define('Pharmacy', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
   },
-  name: {
-    type: String,
-    required: true,
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id',
+    },
+  },
+  pharmacyName: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   registrationNumber: {
-    type: String,
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true,
   },
-  phone: String,
-  email: String,
-  website: String,
-  address: String,
-  city: String,
-  province: String,
-  zipCode: String,
+  description: {
+    type: DataTypes.TEXT,
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  city: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  province: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  postalCode: {
+    type: DataTypes.STRING,
+  },
+  phoneNumber: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  website: {
+    type: DataTypes.STRING,
+  },
+  latitude: {
+    type: DataTypes.FLOAT,
+  },
+  longitude: {
+    type: DataTypes.FLOAT,
+  },
+  services: {
+    type: DataTypes.JSON,
+    defaultValue: [],
+  },
   operatingHours: {
-    monday: { open: String, close: String },
-    tuesday: { open: String, close: String },
-    wednesday: { open: String, close: String },
-    thursday: { open: String, close: String },
-    friday: { open: String, close: String },
-    saturday: { open: String, close: String },
-    sunday: { open: String, close: String },
+    type: DataTypes.JSON,
   },
-  services: [String],
-  logo: String,
-  backgroundImage: String,
-  description: String,
-  licenses: [String],
-  staff: [
-    {
-      name: String,
-      position: String,
-      qualifications: [String],
-    },
-  ],
-  subscriptionPlan: {
-    type: String,
-    enum: ['free', 'premium', 'enterprise'],
-    default: 'free',
-  },
-  subscriptionEndDate: Date,
-  ratings: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 5,
+  rating: {
+    type: DataTypes.FLOAT,
+    defaultValue: 0,
   },
   totalReviews: {
-    type: Number,
-    default: 0,
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  logoUrl: {
+    type: DataTypes.STRING,
   },
   isVerified: {
-    type: Boolean,
-    default: false,
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  verifiedAt: {
+    type: DataTypes.DATE,
   },
   createdAt: {
-    type: Date,
-    default: Date.now,
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
   },
   updatedAt: {
-    type: Date,
-    default: Date.now,
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
   },
 });
 
-module.exports = mongoose.model('Pharmacy', PharmacySchema);
+module.exports = Pharmacy;

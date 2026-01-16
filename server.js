@@ -129,6 +129,14 @@ app.use('/api/reviews', require('./routes/reviews'));
 // Real-time Features (Phase 1)
 app.use('/api/realtime', require('./routes/realtime'));
 
+// New Professional Services Features
+app.use('/api/certifications', require('./routes/certifications'));
+app.use('/api/pharmacies', require('./routes/pharmacies'));
+app.use('/api/cpd-courses', require('./routes/cpd-courses'));
+app.use('/api/mentorship', require('./routes/mentorship'));
+app.use('/api/events', require('./routes/events'));
+app.use('/api/job-applications', require('./routes/job-applications'));
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ 

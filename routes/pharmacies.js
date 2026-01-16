@@ -1,83 +1,120 @@
 const express = require('express');
-const Pharmacy = require('../models/Pharmacy');
 const router = express.Router();
+const { authenticate } = require('../middleware/auth');
+const Pharmacy = require('../models/Pharmacy');
+const { Op } = require('sequelize');
 
-// Get all pharmacies
+// Get all pharmacies with search and filters
 router.get('/', async (req, res) => {
   try {
-    const { city, search, verified } = req.query;
-    let filter = {};
+    const { city, province, search, rating, limit = 20, offset = 0 } = req.query;
+    const where = { isVerified: true };
 
-    if (city) filter.city = city;
-    if (verified) filter.isVerified = verified === 'true';
+    if (city) where.city = city;
+    if (province) where.province = province;
     if (search) {
-      filter.$or = [{ name: { $regex: search, $options: 'i' } }, { address: { $regex: search, $options: 'i' } }];
+      where[Op.or] = [
+        { pharmacyName: { [Op.iLike]: `%${search}%` } },
+        { address: { [Op.iLike]: `%${search}%` } },
+      ];
+    }
+    if (rating) {
+      where.rating = { [Op.gte]: rating };
     }
 
-    const pharmacies = await Pharmacy.find(filter)
-      .populate('user', 'firstName lastName email')
-      .sort({ ratings: -1 })
-      .limit(50);
+    const pharmacies = await Pharmacy.findAndCountAll({
+      where,
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      order: [['rating', 'DESC']],
+    });
 
-    res.json(pharmacies);
+    res.json({
+      total: pharmacies.count,
+      data: pharmacies.rows,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching pharmacies', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
 // Get pharmacy by ID
 router.get('/:id', async (req, res) => {
   try {
-    const pharmacy = await Pharmacy.findById(req.params.id).populate('user', 'email phone');
-
+    const pharmacy = await Pharmacy.findByPk(req.params.id);
     if (!pharmacy) {
       return res.status(404).json({ message: 'Pharmacy not found' });
     }
-
     res.json(pharmacy);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching pharmacy', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
-// Create pharmacy profile
-router.post('/', async (req, res) => {
+// Create new pharmacy (authenticated users)
+router.post('/', authenticate, async (req, res) => {
   try {
-    const { name, registrationNumber, phone, email, address, city, province, services, description } = req.body;
-    const userId = req.headers['user-id'];
-
-    const pharmacy = new Pharmacy({
-      user: userId,
-      name,
+    const {
+      pharmacyName,
       registrationNumber,
-      phone,
-      email,
+      description,
       address,
       city,
       province,
+      postalCode,
+      phoneNumber,
+      email,
+      website,
+      latitude,
+      longitude,
       services,
+      operatingHours,
+      logoUrl,
+    } = req.body;
+
+    const pharmacy = await Pharmacy.create({
+      userId: req.user.id,
+      pharmacyName,
+      registrationNumber,
       description,
+      address,
+      city,
+      province,
+      postalCode,
+      phoneNumber,
+      email,
+      website,
+      latitude,
+      longitude,
+      services: services || [],
+      operatingHours,
+      logoUrl,
     });
 
-    await pharmacy.save();
     res.status(201).json(pharmacy);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating pharmacy profile', error: error.message });
+    res.status(400).json({ message: error.message });
   }
 });
 
 // Update pharmacy
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticate, async (req, res) => {
   try {
-    const pharmacy = await Pharmacy.findByIdAndUpdate(req.params.id, req.body, { new: true });
-
+    const pharmacy = await Pharmacy.findByPk(req.params.id);
     if (!pharmacy) {
       return res.status(404).json({ message: 'Pharmacy not found' });
     }
 
+    if (pharmacy.userId !== req.user.id) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    Object.assign(pharmacy, req.body);
+    await pharmacy.save();
+
     res.json(pharmacy);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating pharmacy', error: error.message });
+    res.status(400).json({ message: error.message });
   }
 });
 

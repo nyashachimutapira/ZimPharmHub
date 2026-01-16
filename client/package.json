@@ -18,7 +18,7 @@
   "scripts": {
     "start": "react-scripts start",
     "dev": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "cross-env CI=false react-scripts build",
     "test": "react-scripts test",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
@@ -46,6 +46,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "autoprefixer": "^10.4.17",
+    "cross-env": "^7.0.3",
     "mongodb-memory-server": "^8.12.2",
     "postcss": "^8.4.32",
     "postcss-preset-env": "^10.6.1",

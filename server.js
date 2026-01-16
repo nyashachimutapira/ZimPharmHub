@@ -137,6 +137,15 @@ app.use('/api/mentorship', require('./routes/mentorship'));
 app.use('/api/events', require('./routes/events'));
 app.use('/api/job-applications', require('./routes/job-applications'));
 
+// Community & Safety Features
+app.use('/api/qa', require('./routes/qa'));
+app.use('/api/incidents', require('./routes/incidents'));
+app.use('/api/regulatory', require('./routes/regulatory'));
+app.use('/api/resources', require('./routes/resources'));
+
+// Analytics & Insights
+app.use('/api/analytics', require('./routes/analytics'));
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ 

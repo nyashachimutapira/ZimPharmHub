@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaStar, FaUsers, FaClock, FaDollarSign } from 'react-icons/fa';
+import { FaStar, FaClock, FaDollarSign } from 'react-icons/fa';
 
 const MentorshipPage = () => {
   const [mentorships, setMentorships] = useState([]);
@@ -8,6 +8,7 @@ const MentorshipPage = () => {
   const [activeTab, setActiveTab] = useState('browse');
   const [search, setSearch] = useState('');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (activeTab === 'browse') {
       fetchMentors();

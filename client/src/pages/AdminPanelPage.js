@@ -11,6 +11,7 @@ function AdminPanelPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const userType = localStorage.getItem('userType');
     if (userType !== 'admin') {

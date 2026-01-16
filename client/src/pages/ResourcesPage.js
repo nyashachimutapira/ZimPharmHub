@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaSearch, FaBookmark, FaShare, FaBook, FaExclamationCircle, FaQuestionCircle, FaNewspaper } from 'react-icons/fa';
+import { FaSearch, FaBookmark, FaShare, FaExclamationCircle, FaQuestionCircle, FaNewspaper } from 'react-icons/fa';
 
 const ResourcesPage = () => {
   const [resources, setResources] = useState([]);

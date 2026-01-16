@@ -14,10 +14,9 @@ export const initializeSocket = (token, serverUrl = 'http://localhost:3001') => 
       token,
     },
     transports: ['websocket', 'polling'],
-    reconnectionDelay: 1000,
     reconnection: true,
-    reconnectionAttempts: 5,
     reconnectionDelay: 1000,
+    reconnectionAttempts: 5,
     reconnectionDelayMax: 5000,
   });
 
@@ -352,7 +351,7 @@ export const getActivityFeed = async (limit = 20, offset = 0) => {
   }
 };
 
-export default {
+const realtimeService = {
   initializeSocket,
   disconnectSocket,
   getSocket,
@@ -371,3 +370,5 @@ export default {
   sendChatMessage,
   getActivityFeed,
 };
+
+export default realtimeService;

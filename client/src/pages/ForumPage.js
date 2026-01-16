@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaHeart, FaComment, FaEye, FaSpinner, FaUser } from 'react-icons/fa';
+import { FaHeart, FaComment, FaEye, FaSpinner } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import CreatePostModal from '../components/CreatePostModal';
 import './ForumPage.css';

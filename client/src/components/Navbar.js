@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaBriefcase, FaBox, FaStoreAlt, FaComments, FaBook, FaCalendarAlt, FaQuestionCircle, FaEnvelope, FaChevronDown } from 'react-icons/fa';
-import Notifications from './Notifications';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaMoon, FaSun, FaBriefcase, FaBox, FaStoreAlt, FaComments, FaBook, FaCalendarAlt, FaQuestionCircle, FaEnvelope } from 'react-icons/fa';
 import NotificationCenter from './NotificationCenter';
 import './Navbar.css';
 import { useAuth } from '../context/AuthContext';

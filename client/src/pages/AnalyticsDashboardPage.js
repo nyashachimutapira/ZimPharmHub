@@ -16,6 +16,7 @@ function AnalyticsDashboardPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('30');
   const [activeTab, setActiveTab] = useState('overview');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     loadAnalyticsData();
   }, [user, selectedPeriod]);

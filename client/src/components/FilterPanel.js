@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FaChevronDown, FaTimes } from 'react-icons/fa';
 import './FilterPanel.css';
 
@@ -57,6 +57,10 @@ function FilterPanel({ onFiltersChange, initialFilters = {} }) {
       experience: experience.length > 0 ? experience : null,
     });
   }, [positions, locations, employmentTypes, experience, onFiltersChange]);
+  
+  // useCallback to wrap the change handler if needed
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedOnFiltersChange = useCallback(onFiltersChange, []);
 
   const togglePosition = (position) => {
     setPositions(prev =>

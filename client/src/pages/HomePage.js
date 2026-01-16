@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { FaBriefcase, FaBox, FaPills, FaUsers, FaNewspaper, FaCalendar, FaSearch } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import ScrollAnimation from '../components/ScrollAnimation';
 import AnimatedCounter from '../components/AnimatedCounter';
 import ParticleBackground from '../components/ParticleBackground';
-import Typewriter from '../components/Typewriter';
 import Button from '../components/Button';
-import GlassCard from '../components/GlassCard';
 import FloatingActionButton from '../components/FloatingActionButton';
 import './HomePage.css';
 
@@ -16,7 +14,6 @@ const AdsCarouselLazy = React.lazy(() => import('../components/AdsCarousel'));
 
 function HomePage() {
     const [stats, setStats] = useState({ jobs: null, pharmacies: null, members: null, events: null });
-    const [activeTab, setActiveTab] = useState('jobs');
     const [filterCategory, setFilterCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
 

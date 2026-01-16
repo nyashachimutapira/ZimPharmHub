@@ -10,6 +10,7 @@ function SavedFiltersPanel({ onApplyFilter, userId }) {
   const [editingFilter, setEditingFilter] = useState(null);
 
   // Fetch saved filters on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchSavedFilters();
   }, [userId]);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { FaHeart, FaComment, FaShare, FaArrowLeft, FaEdit, FaTrash, FaFlag, FaUser, FaThumbsUp } from 'react-icons/fa';
+import { FaHeart, FaComment, FaShare, FaArrowLeft, FaEdit, FaTrash, FaThumbsUp } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './ForumPostDetailPage.css';
 
@@ -15,6 +15,7 @@ function ForumPostDetailPage() {
   const [postingComment, setPostingComment] = useState(false);
   const [liking, setLiking] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchPost();
   }, [id]);

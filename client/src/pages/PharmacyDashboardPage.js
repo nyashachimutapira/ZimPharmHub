@@ -7,7 +7,7 @@ import ProductsManager from '../components/ProductsManager';
 import './DashboardPage.css';
 
 function PharmacyDashboardPage() {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -187,10 +187,11 @@ export const getNotifications = async (filters = {}) => {
       throw new Error('Failed to fetch notifications');
     }
 
-    return await response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error('Error fetching notifications:', error);
-    return { success: false, error: error.message };
+    console.warn('Notifications endpoint disabled or unavailable');
+    return { success: false, notifications: [], error: 'Notifications disabled' };
   }
 };
 
@@ -209,7 +210,7 @@ export const getUnreadCount = async () => {
 
     return await response.json();
   } catch (error) {
-    console.error('Error fetching unread count:', error);
+    console.warn('Unread count endpoint disabled or unavailable');
     return { success: false, unreadCount: 0 };
   }
 };

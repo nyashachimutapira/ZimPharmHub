@@ -88,7 +88,8 @@ if (sequelize) {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/interviews', require('./routes/interviews'));
-app.use('/api/products', require('./routes/products'));
+// TODO: Migrate products route to Sequelize/Postgres
+// app.use('/api/products', require('./routes/products'));
 app.use('/api/pharmacies', require('./routes/pharmacies'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/forum', require('./routes/forum'));
@@ -97,7 +98,8 @@ app.use('/api/events', require('./routes/events'));
 app.use('/api/newsletter', require('./routes/newsletter'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/applications', require('./routes/applications'));
-app.use('/api/notifications', require('./routes/notifications'));
+// TODO: Implement notifications with Sequelize
+// app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/ads', require('./routes/ads'));
 app.use('/api/uploads', require('./routes/uploads'));
@@ -118,8 +120,8 @@ app.use('/api', require('./routes/advancedSearch'));
 
 app.use('/api/analytics', require('./routes/analytics'));
 
-// Dashboard
-app.use('/api/dashboard', require('./routes/dashboard'));
+// TODO: Migrate dashboard to full Sequelize implementation (currently mixes MongoDB and Sequelize)
+// app.use('/api/dashboard', require('./routes/dashboard'));
 
 // Operations (Payroll, Shifts, Suppliers, Campaigns, Reports)
 app.use('/api/operations', require('./routes/operations'));

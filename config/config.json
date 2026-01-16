@@ -1,23 +1,43 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "database_development",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "neondb_owner",
+    "password": "npg_yJK62LQMPBfn",
+    "database": "neondb",
+    "host": "ep-falling-art-aha1uemj-pooler.c-3.us-east-1.aws.neon.tech",
+    "dialect": "postgres",
+    "port": 5432,
+    "ssl": true,
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "neondb_owner",
+    "password": "npg_yJK62LQMPBfn",
+    "database": "neondb",
+    "host": "ep-falling-art-aha1uemj-pooler.c-3.us-east-1.aws.neon.tech",
+    "dialect": "postgres",
+    "port": 5432,
+    "ssl": true,
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres",
+    "ssl": true,
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }

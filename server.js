@@ -48,10 +48,10 @@ if (sequelize) {
     .then(() => {
       console.log('✅ Vercel Postgres connected successfully');
       
-      // Sync models (alter: true only in development, disabled in production)
+      // Sync models (create tables if they don't exist, don't alter existing ones)
        if (process.env.NODE_ENV === 'development') {
         sequelize.sync({ 
-          alter: process.env.NODE_ENV === 'development',
+          alter: false,
           force: false 
         })
           .then(() => {

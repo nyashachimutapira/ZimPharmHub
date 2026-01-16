@@ -120,8 +120,8 @@ app.use('/api', require('./routes/advancedSearch'));
 
 app.use('/api/analytics', require('./routes/analytics'));
 
-// TODO: Migrate dashboard to full Sequelize implementation (currently mixes MongoDB and Sequelize)
-// app.use('/api/dashboard', require('./routes/dashboard'));
+// Dashboard (Sequelize version)
+app.use('/api/dashboard', require('./routes/dashboard-sequelize'));
 
 // Operations (Payroll, Shifts, Suppliers, Campaigns, Reports)
 app.use('/api/operations', require('./routes/operations'));

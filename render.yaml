@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: zimpharmhub
+    env: node
+    plan: free
+    buildCommand: npm install && cd client && npm install && npm run build
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        sync: false
+      - key: POSTGRES_URL
+        sync: false
+      - key: POSTGRES_USER
+        sync: false
+      - key: POSTGRES_PASSWORD
+        sync: false
+      - key: POSTGRES_DATABASE
+        sync: false
+      - key: POSTGRES_HOST
+        sync: false
+      - key: CI
+        value: "false"
+    healthCheckPath: /api/health
+    healthCheckInterval: 30
+    maxInstances: 3
+    minInstances: 1
